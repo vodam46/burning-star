@@ -1,0 +1,42 @@
+
+GENERAL INFO
+roguelike
+magic x computers - fusion?
+levels in the style of cdda
+
+
+
+CRITICAL:
+
+doesnt create tile.o when compiling
+
+rendering
+	what func:
+		- addch()
+		- printw()
+		- addstr()
+	how to deal with different window sizes
+	
+	
+world data structure
+	tile struct
+		- entities
+		- type
+		- vehicles? (not needed (dont know if ill ever make vehiclec))
+		- visibility through said tile
+	populate the tile.h file
+
+world gen
+
+
+
+TODO:
+file system
+
+(somewhat) unfinished files:
+	- entity.h entity.c
+	- tile.h (tile.c)
+
+init functions for tiles and entities
+
+fov algorithm - see thinking notebook
