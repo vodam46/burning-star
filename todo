@@ -2,13 +2,16 @@
 GENERAL INFO
 roguelike
 magic x computers - fusion?
-levels in the style of cdda
-
+levels in the style of cdda (skills)
 
 
 CRITICAL:
 
-doesnt create tile.o when compiling
+(somewhat) unfinished files:
+	- entity.h entity.c
+	- tile.h (tile.c)
+	- map.h (map.c)
+
 
 rendering
 	what func:
@@ -19,6 +22,12 @@ rendering
 	
 	
 world data structure
+
+	done through dynamic 2d arrays (need to learn how to do them)
+		- manual memory allocation
+			( looks like soon ill be writing games in assembly )
+		- see "dynamic_array" in previous folder
+
 	tile struct
 		- entities
 		- type
@@ -31,12 +40,20 @@ world gen
 
 
 TODO:
+
+CONSISTENT NAMING STYLE
+
 file system
 
-(somewhat) unfinished files:
-	- entity.h entity.c
-	- tile.h (tile.c)
-
 init functions for tiles and entities
+	- use to set values according to the type
+		- need a list of entities (json file?)
 
-fov algorithm - see thinking notebook
+movement
+	- requires map, rendering
+
+fov algorithm
+	- see thinking notebook
+	- requires map
+
+for tiles make the "entity" value be a pointer to an array of entities

@@ -1,11 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-enum Type {
-	// types of entities
-	// TODO: fill with different types
-	player
-};
+#include "entity_type.h"
 
 struct entity {
 	// position
@@ -14,10 +10,10 @@ struct entity {
 
 	// type
 	// TODO: set parameters depending on the type (hp...)
-	enum Type type;
+	enum entity_type type;
 };
 
-struct entity ent_init(int _x, int _y, enum Type _type);
+struct entity ent_init(int _x, int _y, enum entity_type _type);
 
 
 #endif
