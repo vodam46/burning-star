@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "entity.h"
 
 struct entity ent_init(int _x, int _y, enum entity_type _type) {
@@ -6,4 +8,4 @@ struct entity ent_init(int _x, int _y, enum entity_type _type) {
 	ret_ent.y = _y;
 	ret_ent.type = _type;
 	return ret_ent;
-}
+};

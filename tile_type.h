@@ -2,7 +2,11 @@
 #define TILE_TYPE_H
 
 enum tile_type {
-	empty
+	empty = 0
+};
+
+static char tile_char[] = {
+	' ',
 };
 
 #endif

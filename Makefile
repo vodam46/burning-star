@@ -4,23 +4,29 @@ OUT=out
 
 default: $(OUT)
 
-$(OUT): main.o entity.o tile.o map.o tile.h entity.h map.h entity_type.h tile_type.h
-	$(CC) main.o entity.o tile.o map.o -I tile.h -I entity.h -I map.h -I tile_type.h -lncurses -o $(OUT)
+$(OUT): main.o entity.o tile.o map.o drawing.o entity_type.h tile_type.h
+	$(CC) main.o entity.o tile.o map.o drawing.o -lncurses -o $(OUT)
 
-main.o: main.c
+main.o: main.c tile.o entity.o map.o tile_type.h
 	$(CC) -c main.c
 
-entity.o: entity.c entity.h
+entity.o: entity.c entity.h entity_type.h
 	$(CC) -c entity.c
 	
-tile.o: tile.c tile.h
+tile.o: tile.c tile.h tile_type.h entity.o
 	$(CC) -c tile.c
 
-map.o: map.c map.h
+map.o: map.c map.h tile.o entity.o tile_type.h
 	$(CC) -c map.c
+
+drawing.o: drawing.c drawing.h tile.o
+	$(CC) -c drawing.c -lncurses
 
 clean:
 	rm -Rf *.o $(OUT)
+
+count:
+	wc -l *
 
 run: $(OUT)
 	./$(OUT)

@@ -6,4 +6,9 @@ enum entity_type {
 	player
 };
 
+static char entity_char[] = {
+	' ',
+	'@',
+};
+
 #endif

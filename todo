@@ -5,6 +5,9 @@ magic x computers - fusion?
 levels in the style of cdda (skills)
 
 
+http://roguebasin.com/index.php/How_to_Write_a_Roguelike_in_15_Steps
+
+
 CRITICAL:
 
 (somewhat) unfinished files:
@@ -12,13 +15,19 @@ CRITICAL:
 	- tile.h (tile.c)
 	- map.h (map.c)
 
+movement
+	- requires map, rendering, main game loop
 
-rendering
+change entity array to dynamic array
+	- fix seg fault
+
+drawing
 	what func:
 		- addch()
 		- printw()
 		- addstr()
 	how to deal with different window sizes
+		- change map size
 	
 	
 world data structure
@@ -33,7 +42,7 @@ world data structure
 		- type
 		- vehicles? (not needed (dont know if ill ever make vehiclec))
 		- visibility through said tile
-	populate the tile.h file
+	populate the types files
 
 world gen
 
@@ -49,11 +58,12 @@ init functions for tiles and entities
 	- use to set values according to the type
 		- need a list of entities (json file?)
 
-movement
-	- requires map, rendering
 
 fov algorithm
 	- see thinking notebook
 	- requires map
 
 for tiles make the "entity" value be a pointer to an array of entities
+COMMENT EVERYTHING TO MAKE IT READABLE TO ANYONE ELSE
+github repo
+	https://product.hubspot.com/blog/git-and-github-tutorial-for-beginners
