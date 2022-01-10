@@ -21,11 +21,14 @@ int main() {
 	// screen init
 	initscr();
 	keypad(stdscr, TRUE);
-
-	printf("works\n");
+	getmaxyx(stdscr, height, width);
 
 	// map init
 	struct tile** wmap = wmap_gen(height, width);
+
+	wmap[0][0].ent.type = player;		// this gives seg fault error, need to find a way to fix it
+	// wmap[0][0] = tile_init(0, 0, empty, ent_init(0, 0, player));	// this gives seg fault too
+
 
 	while (ch != 10) {
 		draw_wmap(wmap, height, width);
@@ -34,5 +37,6 @@ int main() {
 	};
 
 	endwin();
+	free(wmap);
 	return 0;	
 };

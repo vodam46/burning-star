@@ -18,9 +18,6 @@ CRITICAL:
 movement
 	- requires map, rendering, main game loop
 
-change entity array to dynamic array
-	- fix seg fault
-
 drawing
 	what func:
 		- addch()
