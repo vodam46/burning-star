@@ -66,3 +66,4 @@ github repo
 	https://product.hubspot.com/blog/git-and-github-tutorial-for-beginners
 2d vectors
 make code readable -> longer variable names
+rewrite the moving alg to not need the positions but only the id
