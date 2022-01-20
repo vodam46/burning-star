@@ -64,3 +64,5 @@ for tiles make the "entity" value be a pointer to an array of entities
 COMMENT EVERYTHING TO MAKE IT READABLE TO ANYONE ELSE
 github repo
 	https://product.hubspot.com/blog/git-and-github-tutorial-for-beginners
+2d vectors
+make code readable -> longer variable names

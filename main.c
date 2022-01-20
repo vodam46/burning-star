@@ -10,13 +10,15 @@
 #include "drawing.h"
 
 
+// global variables
+int ch = 0;
+int width;	// x
+int height;	// y
+struct tile** wmap;			// world map - array of arrays
+struct entity** ent_arr;	// entity array - array of pointers
+
 int main() {
 	
-	int ch = 0;
-
-	// global variables
-	int width;	// x
-	int height;	// y
 	
 	// screen init
 	initscr();
@@ -24,10 +26,11 @@ int main() {
 	getmaxyx(stdscr, height, width);
 
 	// map init
-	struct tile** wmap = wmap_gen(height, width);
+	wmap = wmap_gen(height, width);
+	ent_arr = malloc(height * width + 1 * sizeof(struct entity));	// +1 in case someone figures out how to make a 0*0 terminal
 
-	wmap[0][0].ent.type = player;		// this gives seg fault error, need to find a way to fix it
-	// wmap[0][0] = tile_init(0, 0, empty, ent_init(0, 0, player));	// this gives seg fault too
+	wmap[0][0].ent.type = player;
+	ent_arr[0] = &wmap[0][0].ent;
 
 
 	while (ch != 10) {
