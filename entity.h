@@ -1,15 +1,18 @@
+
+// header guards
 #ifndef ENTITY_H
 #define ENTITY_H
 
+// custom libraries
 #include "entity_type.h"
 
+// entity struct
 struct entity {
 	// position
 	int x;
 	int y;
 
 	// type
-	// TODO: set parameters depending on the type (hp...)
 	enum entity_type type;
 };
 

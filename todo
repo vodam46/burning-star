@@ -11,39 +11,22 @@ http://roguebasin.com/index.php/How_to_Write_a_Roguelike_in_15_Steps
 CRITICAL:
 
 (somewhat) unfinished files:
-	- entity.h entity.c
+	- entity.h (entity.c)
 	- tile.h (tile.c)
 	- map.h (map.c)
 
-movement
-	- requires map, rendering, main game loop
-
 drawing
-	what func:
-		- addch()
-		- printw()
-		- addstr()
 	how to deal with different window sizes
 		- change map size
-	
-	
+
 world data structure
 
-	done through dynamic 2d arrays (need to learn how to do them)
-		- manual memory allocation
-			( looks like soon ill be writing games in assembly )
-		- see "dynamic_array" in previous folder
-
 	tile struct
-		- entities
-		- type
 		- vehicles? (not needed (dont know if ill ever make vehiclec))
 		- visibility through said tile
 	populate the types files
 
 world gen
-
-
 
 TODO:
 
@@ -51,19 +34,13 @@ CONSISTENT NAMING STYLE
 
 file system
 
-init functions for tiles and entities
-	- use to set values according to the type
-		- need a list of entities (json file?)
-
-
 fov algorithm
 	- see thinking notebook
 	- requires map
 
-for tiles make the "entity" value be a pointer to an array of entities
-COMMENT EVERYTHING TO MAKE IT READABLE TO ANYONE ELSE
-github repo
-	https://product.hubspot.com/blog/git-and-github-tutorial-for-beginners
-2d vectors
+2d vectors -> for positions
 make code readable -> longer variable names
 rewrite the moving alg to not need the positions but only the id
+add a license (not neeed yet)
+start writing tests before its too late
+fix tile and entity init functions positions

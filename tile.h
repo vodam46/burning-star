@@ -1,10 +1,16 @@
+
+// header guards
 #ifndef TILE_H
 #define TILE_H
 
+// custom libraries
 #include "entity.h"
 #include "tile_type.h"
 
-
+// tile structure
+// x y position
+// type of tile
+// entity on tile
 struct tile {
 	int x;
 	int y;
