@@ -5,18 +5,18 @@
 
 // custom libraries
 #include "entity_type.h"
+#include "vector.h"
 
 // entity struct
 struct entity {
 	// position
-	int x;
-	int y;
+	struct vector pos;
 
 	// type
 	enum entity_type type;
 };
 
-struct entity ent_init(int _x, int _y, enum entity_type _type);
+struct entity ent_init(struct vector _pos, enum entity_type _type);
 
 
 #endif

@@ -4,12 +4,13 @@
 
 // custom libraries
 #include "entity.h"
+#include "entity_type.h"
+#include "vector.h"
 
 // entity init function
-struct entity ent_init(int _x, int _y, enum entity_type _type) {
+struct entity ent_init(struct vector _pos, enum entity_type _type) {
 	struct entity ret_ent;
-	ret_ent.x = _x;
-	ret_ent.y = _y;
+	ret_ent.pos = _pos;
 	ret_ent.type = _type;
 	return ret_ent;
 };

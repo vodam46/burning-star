@@ -17,7 +17,7 @@ CRITICAL:
 
 drawing
 	how to deal with different window sizes
-		- change map size
+		- change map size ?
 
 world data structure
 
@@ -38,9 +38,7 @@ fov algorithm
 	- see thinking notebook
 	- requires map
 
-2d vectors -> for positions
-make code readable -> longer variable names
-rewrite the moving alg to not need the positions but only the id
-add a license (not neeed yet)
+make code readable -> longer variable names ?
+add a license (not need yet)
 start writing tests before its too late
-fix tile and entity init functions positions
+clean up the Makefile
