@@ -30,6 +30,7 @@ map.o: map.c map.h tile.o entity.o vector.o tile_type.h
 drawing.o: drawing.c drawing.h tile.o
 	$(CC) -c drawing.c -lncurses
 
+## compile the vector.c file
 vector.o: vector.c vector.h
 	$(CC) -c vector.c
 

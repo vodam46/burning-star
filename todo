@@ -10,6 +10,8 @@ http://roguebasin.com/index.php/How_to_Write_a_Roguelike_in_15_Steps
 
 CRITICAL:
 
+windows installation
+
 (somewhat) unfinished files:
 	- entity.h (entity.c)
 	- tile.h (tile.c)
@@ -21,12 +23,36 @@ drawing
 
 world data structure
 
+	make it infinite ( load chunks from a save file )
+
 	tile struct
 		- vehicles? (not needed (dont know if ill ever make vehiclec))
 		- visibility through said tile
 	populate the types files
 
 world gen
+
+
+movement
+	have i missed something?
+		https://github.com/CleverRaven/Cataclysm-DDA/blob/master/src/avatar_action.cpp#L152-L520
+
+
+CURRENT ORDER OF STUFF:
+basic maze generator
+	- cellular automata mazes ? 
+	- recursive division
+	- recursive backtracking
+	- prim's - looks simple
+	- aldous-broder	- looks slow
+	- kruskal's	- needs alg to find if in cycle
+(maze solving)
+	- dead-end filling
+	- wall follower
+	- djikstra's
+	- a*
+fov algorithm
+enemies
 
 TODO:
 
@@ -36,9 +62,13 @@ file system
 
 fov algorithm
 	- see thinking notebook
-	- requires map
+	- requires visibility
 
 make code readable -> longer variable names ?
 add a license (not need yet)
 start writing tests before its too late
 clean up the Makefile
+wasd key input? vi key input? numpad diagonal input? ( could be done through settings )
+make map struct
+movement into own file
+optimise the bin tree maze generator (if else statements)

@@ -5,12 +5,14 @@
 
 // type of tiles
 enum tile_type {
-	empty = 0
+	empty,
+	wall,
 };
 
 // array for rendering tiles
 static char tile_char[] = {
 	' ',
+	'#',
 };
 
 #endif

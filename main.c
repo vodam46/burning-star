@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 // custom libraries
 #include "tile.h"
@@ -34,8 +35,8 @@ void ent_move(int ent_arr_id, struct vector pos_change) {
 	struct vector old = ent_arr[ent_arr_id]->pos;
 	struct vector new = vect_add(ent_arr[ent_arr_id]->pos, pos_change); 
 
-	// move only if new_pos is within the bounds of the screen
-	if (in_bounds(vect_init(new.y, new.x), vect_init(0, 0), vect_init(height, width))) {
+	// move only if new_pos is within the bounds of the screen and if the new tile isnt a wall
+	if (in_bounds(vect_init(new.y, new.x), vect_init(0, 0), vect_init(height, width)) && wmap[new.y][new.x].type != wall) {
 		
 		// copy the entity from old position to new position
 		wmap[new.y][new.x].ent = wmap[old.y][old.x].ent;		// copy to the new position
@@ -50,21 +51,24 @@ void ent_move(int ent_arr_id, struct vector pos_change) {
 
 int main() {
 	
+	srand(time(NULL));
 	
 	// screen init
 	initscr();							// put screen into ncurses mode
 	keypad(stdscr, TRUE);				// expand the user input keys ( F keys, arrow keys)
 	getmaxyx(stdscr, height, width);	// set height and width to the height and width of the screen
 
+	int player_y = 0;
+	int player_x = 0;
+
 	// map init
-	wmap = wmap_gen(height, width);									// generate the map
+	wmap = wmap_gen_bin_tree_maze(height, width);									// generate the map
 	ent_arr = malloc(height * width + 1 * sizeof(struct entity));	// dynamic allocation of the entity array
 																	// +1 in case someone figures out how to make a 0*0 terminal
 
-	wmap[0][0].ent.type = player;	// set the 0 0 position to the player
-	ent_arr[0] = &wmap[0][0].ent;	// set the array element 0 to the player
+	wmap[player_y][player_x].ent.type = player;	// set the 0 0 position to the player
+	ent_arr[0] = &wmap[player_y][player_x].ent;	// set the array element 0 to the player
 
-	
 	// main game loop
 	// exits only once input is 10 (ENTER key)
 	while (ch != 10) {
@@ -84,19 +88,22 @@ int main() {
 			< = y 0 x -1
 
 			*/
-			case(KEY_UP):		// y -
+			// up arrow or 8
+			case(KEY_UP): case(56):				// y -
 				ent_move(0, vect_init(-1, 0));
 				break;
-			case(KEY_RIGHT):	// x +
+			// right arrow or 6
+			case(KEY_RIGHT): case(54):			// x +
 				ent_move(0, vect_init(0, +1));
 				break;
-			case(KEY_DOWN):		// y +
+			// down arrow or 2
+			case(KEY_DOWN):	case(50):			// y +
 				ent_move(0, vect_init(+1, 0));
 				break;
-			case(KEY_LEFT):		// x -
+			// left arrow or 4
+			case(KEY_LEFT):	case(52):			// x -
 				ent_move(0, vect_init(0, -1));
 				break;
-
 
 			default:
 				break;
