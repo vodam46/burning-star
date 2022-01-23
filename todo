@@ -48,7 +48,7 @@ basic maze generator
 	- kruskal's	- needs alg to find if in cycle
 (maze solving)
 	- dead-end filling
-	- wall follower
+	- wall follower - will be fairly easy
 	- djikstra's
 	- a*
 fov algorithm
@@ -70,5 +70,8 @@ start writing tests before its too late
 clean up the Makefile
 wasd key input? vi key input? numpad diagonal input? ( could be done through settings )
 make map struct
-movement into own file
+movement into own file - entity or map?
 optimise the bin tree maze generator (if else statements)
+convert all positional things (height width) to positional vectors
+basic menu
+figure out why the enemy isnt moving when it should

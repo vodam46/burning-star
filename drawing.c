@@ -12,7 +12,7 @@ void draw_wmap(struct tile** wmap, int height, int width) {
 	for (int y=0; y<height; y++) {
 		for (int x=0; x<width; x++) {
 			// if entity - use entity char, else use tile char
-			if (wmap[y][x].ent.type == player) {
+			if (wmap[y][x].ent.type != none) {
 				mvaddch(y, x, entity_char[wmap[y][x].ent.type]);
 			}
 			else {

@@ -6,13 +6,15 @@
 // entity types
 enum entity_type {
 	none,
-	player
+	player,
+	enemy,
 };
 
 // for rendering entities
 static char entity_char[] = {
 	' ',
 	'@',
+	'0',
 };
 
 #endif

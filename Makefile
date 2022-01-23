@@ -7,11 +7,11 @@ OUT=out
 default: $(OUT)
 
 ## generate the binary file
-$(OUT): main.o entity.o tile.o map.o drawing.o vector.o entity_type.h tile_type.h
-	$(CC) main.o entity.o tile.o map.o drawing.o vector.o -lncurses -o $(OUT)
+$(OUT): main.o entity.o tile.o map.o drawing.o vector.o ai.o entity_type.h tile_type.h
+	$(CC) main.o entity.o tile.o map.o drawing.o vector.o ai.o -lncurses -o $(OUT)
 
 ## compile the main.c file
-main.o: main.c tile.o entity.o map.o vector.o tile_type.h
+main.o: main.c tile.o entity.o map.o vector.o ai.o tile_type.h
 	$(CC) -c main.c
 
 ## compile the entity.c file
@@ -33,6 +33,10 @@ drawing.o: drawing.c drawing.h tile.o
 ## compile the vector.c file
 vector.o: vector.c vector.h
 	$(CC) -c vector.c
+
+## compile the ai.c file
+ai.o: ai.c ai.h
+	$(CC) -c ai.c
 
 ## remove the object file and the binary file
 clean:

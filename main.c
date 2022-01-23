@@ -12,6 +12,7 @@
 #include "entity_type.h"
 #include "drawing.h"
 #include "vector.h"
+#include "ai.h"
 
 
 // global variables
@@ -21,32 +22,46 @@ int height;					// height of the screen - y
 struct tile** wmap;			// world map - array of arrays
 struct entity** ent_arr;	// entity array - array of pointers
 
-// function to check if position is within boundaries
-int in_bounds(struct vector pos, struct vector min, struct vector max) {
-	return pos.y >= min.y && pos.y < max.y && pos.x >= min.x && pos.x < max.x;
-};
 
 // move entity from old_pos to new_pos, ent_arr_id is the position in ent_arr
 void ent_move(int ent_arr_id, struct vector pos_change) {
 
-	// debug message
-	// printf("old_y: %d, old_x: %d, new_y: %d, new_x: %d in_bounds: %d / ", old_y, old_x, new_y, new_x, in_bounds(new_y, new_x, 0, 0, height, width));
-
 	struct vector old = ent_arr[ent_arr_id]->pos;
 	struct vector new = vect_add(ent_arr[ent_arr_id]->pos, pos_change); 
 
+	// debug message
+	/*
+	if (ent_arr_id == 1)
+	printf("ent_arr_id: %d, old_y: %d, old_x: %d, new_y: %d, new_x: %d in_bounds: %d / ", 
+		ent_arr_id,
+		old.y, old.x,
+		new.y, new.x,
+		in_bounds(vect_init(new.y, new.x), vect_init(0, 0), vect_init(height, width))
+		);
+	*/
+
 	// move only if new_pos is within the bounds of the screen and if the new tile isnt a wall
-	if (in_bounds(vect_init(new.y, new.x), vect_init(0, 0), vect_init(height, width)) && wmap[new.y][new.x].type != wall) {
+	if (in_bounds(vect_init(new.y, new.x), vect_init(0, 0), vect_init(height, width)) && wmap[new.y][new.x].type != wall && wmap[new.y][new.x].ent.type == none) {
 		
 		// copy the entity from old position to new position
 		wmap[new.y][new.x].ent = wmap[old.y][old.x].ent;		// copy to the new position
 		wmap[new.y][new.x].ent.pos.y = new.y;						// update the y position
 		wmap[new.y][new.x].ent.pos.x = new.x;						// update the x position
-		wmap[old.y][old.x].ent = ent_init(vect_init(old.y, old.x), none);	// delete the entity from the old_position
+		wmap[old.y][old.x].ent = ent_init(vect_init(old.y, old.x), none);	// the entity from the old_position to the new positon
 
 		// update the entity array
 		ent_arr[ent_arr_id] = &wmap[new.y][new.x].ent;
 	}
+};
+
+void create_entity(struct vector pos, enum entity_type _type, int ent_arr_id) {
+
+	// debug message
+	// printf("character: %c, position: y: %d, x: %d", entity_char[_type], pos.y, pos.x);
+
+	wmap[pos.y][pos.x].ent.type = _type;
+	wmap[pos.y][pos.x].ent.pos = pos;
+	ent_arr[ent_arr_id] = &wmap[pos.y][pos.x].ent;
 };
 
 int main() {
@@ -62,12 +77,11 @@ int main() {
 	int player_x = 0;
 
 	// map init
-	wmap = wmap_gen_bin_tree_maze(height, width);									// generate the map
+	wmap = wmap_gen(height, width);									// generate the map
 	ent_arr = malloc(height * width + 1 * sizeof(struct entity));	// dynamic allocation of the entity array
 																	// +1 in case someone figures out how to make a 0*0 terminal
-
-	wmap[player_y][player_x].ent.type = player;	// set the 0 0 position to the player
-	ent_arr[0] = &wmap[player_y][player_x].ent;	// set the array element 0 to the player
+	create_entity(vect_init(0, 0), player, 0);
+	create_entity(vect_init(1, 1), enemy, 1);
 
 	// main game loop
 	// exits only once input is 10 (ENTER key)
@@ -107,9 +121,10 @@ int main() {
 
 			default:
 				break;
-
 		};
-		
+
+		ent_move(1, random_movement());
+
 //		printf("ent_arr x: %d, ent_arr y: %d / ", ent_arr[0]->y, ent_arr[0]->x);
 	};
 
