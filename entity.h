@@ -18,5 +18,4 @@ struct entity {
 
 struct entity ent_init(struct vector _pos, enum entity_type _type);
 
-
 #endif

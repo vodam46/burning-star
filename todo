@@ -16,6 +16,7 @@ windows installation
 	- entity.h (entity.c)
 	- tile.h (tile.c)
 	- map.h (map.c)
+	- ai.h (ai.c)
 
 drawing
 	how to deal with different window sizes
@@ -32,11 +33,9 @@ world data structure
 
 world gen
 
-
 movement
 	have i missed something?
 		https://github.com/CleverRaven/Cataclysm-DDA/blob/master/src/avatar_action.cpp#L152-L520
-
 
 CURRENT ORDER OF STUFF:
 basic maze generator
@@ -74,4 +73,3 @@ movement into own file - entity or map?
 optimise the bin tree maze generator (if else statements)
 convert all positional things (height width) to positional vectors
 basic menu
-figure out why the enemy isnt moving when it should

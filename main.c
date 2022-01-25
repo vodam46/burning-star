@@ -21,6 +21,7 @@ int width;					// width of the screen - x
 int height;					// height of the screen - y
 struct tile** wmap;			// world map - array of arrays
 struct entity** ent_arr;	// entity array - array of pointers
+int ent_num = 0;
 
 
 // move entity from old_pos to new_pos, ent_arr_id is the position in ent_arr
@@ -54,14 +55,15 @@ void ent_move(int ent_arr_id, struct vector pos_change) {
 	}
 };
 
-void create_entity(struct vector pos, enum entity_type _type, int ent_arr_id) {
+void create_entity(struct vector pos, enum entity_type _type) {
 
 	// debug message
 	// printf("character: %c, position: y: %d, x: %d", entity_char[_type], pos.y, pos.x);
 
 	wmap[pos.y][pos.x].ent.type = _type;
 	wmap[pos.y][pos.x].ent.pos = pos;
-	ent_arr[ent_arr_id] = &wmap[pos.y][pos.x].ent;
+	ent_arr[ent_num] = &wmap[pos.y][pos.x].ent;
+	ent_num++;
 };
 
 int main() {
@@ -80,8 +82,10 @@ int main() {
 	wmap = wmap_gen(height, width);									// generate the map
 	ent_arr = malloc(height * width + 1 * sizeof(struct entity));	// dynamic allocation of the entity array
 																	// +1 in case someone figures out how to make a 0*0 terminal
-	create_entity(vect_init(0, 0), player, 0);
-	create_entity(vect_init(1, 1), enemy, 1);
+
+	create_entity(vect_init(0, 0), player);
+	create_entity(vect_init(1, 1), enemy);
+	create_entity(vect_init(10, 10), enemy);
 
 	// main game loop
 	// exits only once input is 10 (ENTER key)
@@ -123,9 +127,9 @@ int main() {
 				break;
 		};
 
-		ent_move(1, random_movement());
-
-//		printf("ent_arr x: %d, ent_arr y: %d / ", ent_arr[0]->y, ent_arr[0]->x);
+		for (int ent_i = 1; ent_i < ent_num; ent_i++) {
+			ent_move(ent_i, random_movement());
+		};
 	};
 
 	endwin();		// end ncurses mode
