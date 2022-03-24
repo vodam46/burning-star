@@ -30,24 +30,22 @@ void ent_move(int ent_arr_id, struct vector pos_change) {
 	struct vector old = ent_arr[ent_arr_id]->pos;
 	struct vector new = vect_add(ent_arr[ent_arr_id]->pos, pos_change); 
 
-	// debug message
-	/*
-	if (ent_arr_id == 1)
-	printf("ent_arr_id: %d, old_y: %d, old_x: %d, new_y: %d, new_x: %d in_bounds: %d / ", 
+#ifdef DEBUG
+	printf("entity movement ent_arr_id: %d, old_y: %d, old_x: %d, new_y: %d, new_x: %d in_bounds: %d / ", 
 		ent_arr_id,
 		old.y, old.x,
 		new.y, new.x,
 		in_bounds(vect_init(new.y, new.x), vect_init(0, 0), vect_init(height, width))
 		);
-	*/
+#endif
 
 	// move only if new_pos is within the bounds of the screen and if the new tile isnt a wall
 	if (in_bounds(vect_init(new.y, new.x), vect_init(0, 0), vect_init(height, width)) && wmap[new.y][new.x].type != wall && wmap[new.y][new.x].ent.type == none) {
 		
 		// copy the entity from old position to new position
-		wmap[new.y][new.x].ent = wmap[old.y][old.x].ent;		// copy to the new position
-		wmap[new.y][new.x].ent.pos.y = new.y;						// update the y position
-		wmap[new.y][new.x].ent.pos.x = new.x;						// update the x position
+		wmap[new.y][new.x].ent = wmap[old.y][old.x].ent;					// copy to the new position
+		wmap[new.y][new.x].ent.pos.y = new.y;								// update the y position
+		wmap[new.y][new.x].ent.pos.x = new.x;								// update the x position
 		wmap[old.y][old.x].ent = ent_init(vect_init(old.y, old.x), none);	// the entity from the old_position to the new positon
 
 		// update the entity array
@@ -57,8 +55,9 @@ void ent_move(int ent_arr_id, struct vector pos_change) {
 
 void create_entity(struct vector pos, enum entity_type _type) {
 
-	// debug message
-	// printf("character: %c, position: y: %d, x: %d", entity_char[_type], pos.y, pos.x);
+#ifdef DEBUG	
+	printf("entity creation %c, position: y: %d, x: %d", entity_char[_type], pos.y, pos.x);
+#endif
 
 	wmap[pos.y][pos.x].ent.type = _type;
 	wmap[pos.y][pos.x].ent.pos = pos;
@@ -70,10 +69,16 @@ int main() {
 	
 	srand(time(NULL));
 	
+#ifndef DEBUG
 	// screen init
 	initscr();							// put screen into ncurses mode
 	keypad(stdscr, TRUE);				// expand the user input keys ( F keys, arrow keys)
 	getmaxyx(stdscr, height, width);	// set height and width to the height and width of the screen
+#else
+	// 10 by 10 screen should be able to fit into every terminal, and is more than enough for debugging purposes
+	height = 10;
+	width = 10;
+#endif
 
 	int player_y = 0;
 	int player_x = 0;
@@ -81,17 +86,19 @@ int main() {
 	// map init
 	wmap = wmap_gen(height, width);									// generate the map
 	ent_arr = malloc(height * width + 1 * sizeof(struct entity));	// dynamic allocation of the entity array
-																	// +1 in case someone figures out how to make a 0*0 terminal
 
 	create_entity(vect_init(0, 0), player);
 	create_entity(vect_init(1, 1), enemy);
-	create_entity(vect_init(10, 10), enemy);
 
+// #ifndef DEBUG
 	// main game loop
 	// exits only once input is 10 (ENTER key)
 	while (ch != 10) {
+#ifndef DEBUG
 		draw_wmap(wmap, height, width);	// draws the map
+		move(height-1, width-1);
 		ch = getch();					// updates the user input
+#endif
 
 		// react to user input
 		switch(ch) {
@@ -127,12 +134,16 @@ int main() {
 				break;
 		};
 
+		if (ch == 10) break;
+
 		for (int ent_i = 1; ent_i < ent_num; ent_i++) {
 			ent_move(ent_i, random_movement());
 		};
 	};
 
+#ifndef DEBUG
 	endwin();		// end ncurses mode
+#endif
 	free(wmap);		// free the memory for the world map
 	free(ent_arr);	// free the memory for the entity array
 	return 0;

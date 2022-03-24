@@ -31,8 +31,9 @@ struct vector random_movement() {
 			break;
 
 	};
-	// debug message
-	// printf("y: %d, x: %d / ", vect_dir.y, vect_dir.x);
+#ifdef DEBUG
+	printf("random movement y: %d, x: %d / ", vect_dir.y, vect_dir.x);
+#endif
 	return vect_dir;
 };
 

@@ -6,8 +6,6 @@
 // custom libraries
 #include "vector.h"
 
-
 struct vector random_movement();
-
 
 #endif
