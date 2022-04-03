@@ -51,7 +51,7 @@ void ent_move(int ent_arr_id, struct vector pos_change) {
 		// update the entity array
 		ent_arr[ent_arr_id] = &wmap[new.y][new.x].ent;
 	}
-};
+}
 
 void create_entity(struct vector pos, enum entity_type _type) {
 
@@ -63,7 +63,7 @@ void create_entity(struct vector pos, enum entity_type _type) {
 	wmap[pos.y][pos.x].ent.pos = pos;
 	ent_arr[ent_num] = &wmap[pos.y][pos.x].ent;
 	ent_num++;
-};
+}
 
 int main() {
 	
@@ -87,7 +87,7 @@ int main() {
 	wmap = wmap_gen(height, width);									// generate the map
 	ent_arr = malloc(height * width + 1 * sizeof(struct entity));	// dynamic allocation of the entity array
 
-	create_entity(vect_init(0, 0), player);
+	create_entity(vect_init(player_y, player_x), player);
 	create_entity(vect_init(1, 1), enemy);
 
 // #ifndef DEBUG
@@ -132,14 +132,14 @@ int main() {
 
 			default:
 				break;
-		};
+		}
 
 		if (ch == 10) break;
 
 		for (int ent_i = 1; ent_i < ent_num; ent_i++) {
 			ent_move(ent_i, random_movement());
-		};
-	};
+		}
+	}
 
 #ifndef DEBUG
 	endwin();		// end ncurses mode
@@ -147,4 +147,4 @@ int main() {
 	free(wmap);		// free the memory for the world map
 	free(ent_arr);	// free the memory for the entity array
 	return 0;
-};
+}

@@ -21,7 +21,7 @@ struct vector random_movement() {
 			vect_dir = vect_init(0, +1);
 			break;
 		case(2):
-			vect_dir = vect_dir = vect_init(+1, 0);
+			vect_dir = vect_init(+1, 0);
 			break;
 		case(3):
 			vect_dir =  vect_init(0, -1);
@@ -30,10 +30,10 @@ struct vector random_movement() {
 			vect_dir = vect_init(0, 0);
 			break;
 
-	};
+	}
 #ifdef DEBUG
 	printf("random movement y: %d, x: %d / ", vect_dir.y, vect_dir.x);
 #endif
 	return vect_dir;
-};
+}
 

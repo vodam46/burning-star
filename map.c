@@ -22,10 +22,10 @@ struct tile** wmap_gen(int rows, int cols) {
 			wmap[y][x].pos.y = y;								// y position
 			wmap[y][x].pos.x = x;								// x position
 			wmap[y][x].type = empty;						// type of tile
-		};
-	};
+		}
+	}
 	return wmap;
-};
+}
 
 struct tile** wmap_gen_tile(int rows, int cols, enum tile_type _type) {
 
@@ -38,10 +38,10 @@ struct tile** wmap_gen_tile(int rows, int cols, enum tile_type _type) {
 			wmap[y][x].pos.y = y;								// y position
 			wmap[y][x].pos.x = x;								// x position
 			wmap[y][x].type = _type;								// type of tile
-		};
-	};
+		}
+	}
 	return wmap;
-};
+}
 
 struct tile** wmap_gen_maze_base(int rows, int cols) {
 
@@ -49,11 +49,11 @@ struct tile** wmap_gen_maze_base(int rows, int cols) {
 
 	for (int y=0; y<(int)(rows+1)/2; y++) {
 		for (int x=0; x<(int)(cols+1)/2; x++) {
-			wmap[y*2][x*2].type = none;
-		};
-	};
+			wmap[y*2][x*2].type = empty;
+		}
+	}
 	return wmap;
-};
+}
 
 struct tile** wmap_gen_bin_tree_maze(int rows, int cols) {
 
@@ -67,15 +67,15 @@ struct tile** wmap_gen_bin_tree_maze(int rows, int cols) {
 				}
 				else {
 					wmap[y*2][x*2-1].type = empty;
-				};
+				}
 			}
 			else if (y > 0) {
 				wmap[y*2-1][x*2].type = empty;
 			}
 			else if (x > 0) {
 				wmap[y*2][x*2-1].type = empty;
-			};
-		};
-	};
+			}
+		}
+	}
 	return wmap;
-};
+}

@@ -10,7 +10,7 @@ enum tile_type {
 };
 
 // array for rendering tiles
-static char tile_char[] = {
+static const char tile_char[] = {
 	' ',
 	'#',
 };

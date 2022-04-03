@@ -11,7 +11,7 @@ enum entity_type {
 };
 
 // for rendering entities
-static char entity_char[] = {
+static const char entity_char[] = {
 	' ',
 	'@',
 	'0',

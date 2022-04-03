@@ -2,7 +2,7 @@
 ## variables for ease of change
 CC=cc
 OUT=out
-CFLAGS=-Wall
+CFLAGS=-Wall -Wextra -pedantic
 
 ## default target
 default: $(OUT)

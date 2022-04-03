@@ -13,4 +13,4 @@ struct entity ent_init(struct vector _pos, enum entity_type _type) {
 	ret_ent.pos = _pos;
 	ret_ent.type = _type;
 	return ret_ent;
-};
+}
