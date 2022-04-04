@@ -7,8 +7,8 @@
 // x y position
 // type of tile
 // entity on the tile
-struct tile tile_init(struct vector _pos, enum tile_type _type, struct entity _ent) {
-	struct tile ret_tile;
+tile tile_init(vector _pos, tile_type _type, entity _ent) {
+	tile ret_tile;
 	ret_tile.pos = _pos;
 	ret_tile.type = _type;
 	ret_tile.ent = _ent;

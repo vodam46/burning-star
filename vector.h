@@ -5,16 +5,16 @@
 
 // vector struct
 // y x position
-struct vector {
+typedef struct {
 	int y;
 	int x;
-};
+} vector ;
 
 // vector init function
-struct vector vect_init(int y, int x);
+vector vect_init(int y, int x);
 
-struct vector vect_add(struct vector left, struct vector right);
+vector vect_add(vector left, vector right);
 
-int in_bounds(struct vector pos, struct vector min, struct vector max);
+int in_bounds(vector pos, vector min, vector max);
 
 #endif

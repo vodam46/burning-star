@@ -11,12 +11,12 @@
 // world generation
 // rows is the height
 // cols is the width
-struct tile** wmap_gen(int rows, int cols) {
+tile** wmap_gen(int rows, int cols) {
 
-	struct tile** wmap = malloc(rows * sizeof(struct tile));	// allocate the 2d array
+	tile** wmap = malloc(rows * sizeof(tile));	// allocate the 2d array
 
 	for (int y=0; y<rows; y++) {
-		wmap[y] = calloc(cols, sizeof(struct tile));		// allocate each array of the 2d array
+		wmap[y] = calloc(cols, sizeof(tile));		// allocate each array of the 2d array
 		for (int x=0; x<cols; x++) {
 			// set the variables for each tile
 			wmap[y][x].pos.y = y;								// y position
@@ -27,12 +27,12 @@ struct tile** wmap_gen(int rows, int cols) {
 	return wmap;
 }
 
-struct tile** wmap_gen_tile(int rows, int cols, enum tile_type _type) {
+tile** wmap_gen_tile(int rows, int cols, tile_type _type) {
 
-	struct tile** wmap = malloc(rows * sizeof(struct tile));	// allocate the 2d array
+	tile** wmap = malloc(rows * sizeof(tile));	// allocate the 2d array
 
 	for (int y=0; y<rows; y++) {
-		wmap[y] = calloc(cols, sizeof(struct tile));		// allocate each array of the 2d array
+		wmap[y] = calloc(cols, sizeof(tile));		// allocate each array of the 2d array
 		for (int x=0; x<cols; x++) {
 			// set the variables for each tile
 			wmap[y][x].pos.y = y;								// y position
@@ -43,9 +43,9 @@ struct tile** wmap_gen_tile(int rows, int cols, enum tile_type _type) {
 	return wmap;
 }
 
-struct tile** wmap_gen_maze_base(int rows, int cols) {
+tile** wmap_gen_maze_base(int rows, int cols) {
 
-	struct tile** wmap = wmap_gen_tile(rows, cols, wall);
+	tile** wmap = wmap_gen_tile(rows, cols, wall);
 
 	for (int y=0; y<(int)(rows+1)/2; y++) {
 		for (int x=0; x<(int)(cols+1)/2; x++) {
@@ -55,9 +55,9 @@ struct tile** wmap_gen_maze_base(int rows, int cols) {
 	return wmap;
 }
 
-struct tile** wmap_gen_bin_tree_maze(int rows, int cols) {
+tile** wmap_gen_bin_tree_maze(int rows, int cols) {
 
-	struct tile** wmap = wmap_gen_maze_base(rows, cols);
+	tile** wmap = wmap_gen_maze_base(rows, cols);
 
 	for (int y=0; y<(int)(rows+1)/2; y++) {
 		for (int x=0; x<(int)(cols+1)/2; x++) {

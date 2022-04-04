@@ -19,16 +19,16 @@
 int ch = 0;					// user input
 int width;					// width of the screen - x
 int height;					// height of the screen - y
-struct tile** wmap;			// world map - array of arrays
-struct entity** ent_arr;	// entity array - array of pointers
+tile** wmap;			// world map - array of arrays
+entity** ent_arr;	// entity array - array of pointers
 int ent_num = 0;
 
 
 // move entity from old_pos to new_pos, ent_arr_id is the position in ent_arr
-void ent_move(int ent_arr_id, struct vector pos_change) {
+void ent_move(int ent_arr_id, vector pos_change) {
 
-	struct vector old = ent_arr[ent_arr_id]->pos;
-	struct vector new = vect_add(ent_arr[ent_arr_id]->pos, pos_change); 
+	vector old = ent_arr[ent_arr_id]->pos;
+	vector new = vect_add(ent_arr[ent_arr_id]->pos, pos_change); 
 
 #ifdef DEBUG
 	printf("entity movement ent_arr_id: %d, old_y: %d, old_x: %d, new_y: %d, new_x: %d in_bounds: %d / ", 
@@ -53,7 +53,7 @@ void ent_move(int ent_arr_id, struct vector pos_change) {
 	}
 }
 
-void create_entity(struct vector pos, enum entity_type _type) {
+void create_entity(vector pos, entity_type _type) {
 
 #ifdef DEBUG	
 	printf("entity creation %c, position: y: %d, x: %d", entity_char[_type], pos.y, pos.x);
@@ -85,7 +85,7 @@ int main() {
 
 	// map init
 	wmap = wmap_gen(height, width);									// generate the map
-	ent_arr = malloc(height * width + 1 * sizeof(struct entity));	// dynamic allocation of the entity array
+	ent_arr = malloc(height * width + 1 * sizeof(entity));	// dynamic allocation of the entity array
 
 	create_entity(vect_init(player_y, player_x), player);
 	create_entity(vect_init(1, 1), enemy);

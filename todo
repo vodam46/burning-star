@@ -51,17 +51,16 @@ basic maze generator
 	- djikstra's
 	- a*
 fov algorithm
+	- see thinking notebook
+	- requires visibility
 enemies
+	- combat system
 
 TODO:
 
 CONSISTENT NAMING STYLE
 
 file system
-
-fov algorithm
-	- see thinking notebook
-	- requires visibility
 
 make code readable -> longer variable names ?
 add a license (not need yet)

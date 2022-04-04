@@ -4,11 +4,11 @@
 #define ENTITY_TYPE_H
 
 // entity types
-enum entity_type {
+typedef enum {
 	none,
 	player,
 	enemy,
-};
+} entity_type ;
 
 // for rendering entities
 static const char entity_char[] = {

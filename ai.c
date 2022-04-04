@@ -8,10 +8,10 @@
 #include "vector.h"
 
 
-struct vector random_movement() {
+vector random_movement() {
 	int direction = rand() % 4;
 
-	struct vector vect_dir;
+	vector vect_dir;
 
 	switch(direction) {		
 		case(0):

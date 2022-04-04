@@ -11,12 +11,12 @@
 // x y position
 // type of tile
 // entity on tile
-struct tile {
-	struct vector pos;
-	enum tile_type type;
-	struct entity ent;
-};
+typedef struct {
+	vector pos;
+	tile_type type;
+	entity ent;
+} tile ;
 
-struct tile tile_init(struct vector _pos, enum tile_type _type, struct entity _ent);
+tile tile_init(vector _pos, tile_type _type, entity _ent);
 
 #endif

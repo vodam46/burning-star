@@ -4,10 +4,10 @@
 #define TILE_TYPE_H
 
 // type of tiles
-enum tile_type {
+typedef enum {
 	empty,
 	wall,
-};
+} tile_type ;
 
 // array for rendering tiles
 static const char tile_char[] = {

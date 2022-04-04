@@ -8,14 +8,14 @@
 #include "vector.h"
 
 // entity struct
-struct entity {
+typedef struct {
 	// position
-	struct vector pos;
+	vector pos;
 
 	// type
-	enum entity_type type;
-};
+	entity_type type;
+} entity ;
 
-struct entity ent_init(struct vector _pos, enum entity_type _type);
+entity ent_init(vector _pos, entity_type _type);
 
 #endif

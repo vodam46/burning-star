@@ -9,6 +9,6 @@
 // custom libraries
 #include "tile.h"
 
-void draw_wmap(struct tile** wmap, int height, int width);
+void draw_wmap(tile** wmap, int height, int width);
 
 #endif

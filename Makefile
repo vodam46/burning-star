@@ -49,8 +49,8 @@ clean:
 	rm -Rf *.o $(OUT)
 
 ## count the number of lines
-count:
-	wc -l *
+count: clean
+	wc *
 
 ## run the program
 run: $(OUT)
