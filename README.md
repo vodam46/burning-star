@@ -19,7 +19,7 @@ make
 ```sh
 make run
 ```
-or
+or (after compilation)
 ```sh
 ./out
 ```
@@ -28,12 +28,7 @@ or
 *coming soon, sorry*
 
 ## Debug version
-debug mode showing information about the processes without commenting/uncommenting code by hand
-(as of now doesn't display much, but for future purposes)
+Runs the entire program inside gdb
 ```sh
 make debug
-```
-to immediately run the program
-```sh
-make debug run
 ```
