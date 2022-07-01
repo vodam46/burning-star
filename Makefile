@@ -2,15 +2,17 @@
 ## variables for ease of change
 CC=cc
 OUT=out
+OUT_DEBUG=out_debug
 CFLAGS=-Wall -Wextra -pedantic
+
+.PHONY: default debug clean count run
 
 ## default target
 default: $(OUT)
 
-## compile the debug version
-debug: CFLAGS+=-D
-debug: CFLAGS+=DEBUG
-debug: clean $(OUT)
+debug: clean
+	make 'CFLAGS=$(CFLAGS) -g' OUT=$(OUT_DEBUG)
+	gdb out_debug
 
 ## generate the binary file
 $(OUT): main.o entity.o tile.o map.o drawing.o vector.o ai.o entity_type.h tile_type.h
@@ -46,7 +48,7 @@ ai.o: ai.c ai.h
 
 ## remove the object file and the binary file
 clean:
-	rm -Rf *.o $(OUT)
+	@rm -Rf *.o $(OUT) $(OUT_DEBUG)
 
 ## count the number of lines
 count: clean
