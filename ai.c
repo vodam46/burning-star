@@ -31,9 +31,6 @@ vector random_movement() {
 			break;
 
 	}
-#ifdef DEBUG
-	printf("random movement y: %d, x: %d / ", vect_dir.y, vect_dir.x);
-#endif
 	return vect_dir;
 }
 
