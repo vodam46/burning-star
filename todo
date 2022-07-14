@@ -72,3 +72,4 @@ movement into own file - entity or map?
 optimise the bin tree maze generator (if else statements)
 convert all positional things (height width) to positional vectors
 basic menu
+optimize basic_dir

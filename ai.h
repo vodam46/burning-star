@@ -8,4 +8,6 @@
 
 vector random_movement();
 
+vector basic_dir(vector start, vector end);
+
 #endif

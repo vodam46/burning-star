@@ -6,6 +6,7 @@
 // custom libraries
 #include "ai.h"
 #include "vector.h"
+#include "math.h"
 
 
 vector random_movement() {
@@ -34,3 +35,20 @@ vector random_movement() {
 	return vect_dir;
 }
 
+vector basic_dir(vector start, vector end) {
+	vector direction = vect_init(start.y - end.y, start.x - end.x);
+	if (abs(direction.y) > abs(direction.x)) {
+		if (direction.y > 0) {
+			return (vector) {-1, 0 };
+		} else if (direction.y < 0) {
+			return (vector) { 1, 0 };
+		}
+	} else {
+		if (direction.x > 0) {
+			return (vector) { 0,-1 };
+		} else if (direction.x < 0) {
+			return (vector) { 0, 1 };
+		}
+	}
+	return (vector) { 0, 0 };
+}

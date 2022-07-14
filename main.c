@@ -61,8 +61,8 @@ int main() {
 	keypad(stdscr, TRUE);				// expand the user input keys ( F keys, arrow keys)
 	getmaxyx(stdscr, height, width);	// set height and width to the height and width of the screen
 
-	int player_y = 0;
-	int player_x = 0;
+	int player_y = 10;
+	int player_x = 10;
 
 	// map init
 	wmap = wmap_gen(height, width);									// generate the map
@@ -115,7 +115,7 @@ int main() {
 		if (ch == 10) break;
 
 		for (int ent_i = 1; ent_i < ent_num; ent_i++) {
-			ent_move(ent_i, random_movement());
+			ent_move(ent_i, basic_dir(ent_arr[ent_i]->pos, ent_arr[0]->pos));
 		}
 	}
 
