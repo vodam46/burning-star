@@ -12,15 +12,10 @@ CRITICAL:
 
 windows installation
 
-(somewhat) unfinished files:
-	- entity.h (entity.c)
-	- tile.h (tile.c)
-	- map.h (map.c)
-	- ai.h (ai.c)
-
 drawing
 	how to deal with different window sizes
 		- change map size ?
+		- generate a larger map, but draw only a portion of it (endless levels)
 
 world data structure
 
@@ -38,21 +33,9 @@ movement
 		https://github.com/CleverRaven/Cataclysm-DDA/blob/master/src/avatar_action.cpp#L152-L520
 
 CURRENT ORDER OF STUFF:
-basic maze generator
-	- cellular automata mazes ? 
-	- recursive division
-	- recursive backtracking
-	- prim's - looks simple
-	- aldous-broder	- looks slow
-	- kruskal's	- needs alg to find if in cycle
 (maze solving)
-	- dead-end filling
-	- wall follower - will be fairly easy
 	- djikstra's
 	- a*
-fov algorithm
-	- see thinking notebook
-	- requires visibility
 enemies
 	- combat system
 
@@ -67,6 +50,7 @@ add a license (not need yet)
 start writing tests before its too late
 clean up the Makefile
 wasd key input? vi key input? numpad diagonal input? ( could be done through settings )
+	- settings
 make map struct
 movement into own file - entity or map?
 optimise the bin tree maze generator (if else statements)

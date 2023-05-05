@@ -78,6 +78,7 @@ int main() {
 		move(height-1, width-1);
 		ch = getch();					// updates the user input
 
+		vector move_dir = vect_init(0,0);
 		// react to user input
 		switch(ch) {
 			/*
@@ -93,26 +94,27 @@ int main() {
 			*/
 			// up arrow or 8
 			case(KEY_UP): case(56):				// y -
-				ent_move(0, vect_init(-1, 0));
+				move_dir = vect_init(-1, 0);
 				break;
 			// right arrow or 6
 			case(KEY_RIGHT): case(54):			// x +
-				ent_move(0, vect_init(0, +1));
+				move_dir = vect_init(0, +1);
 				break;
 			// down arrow or 2
 			case(KEY_DOWN):	case(50):			// y +
-				ent_move(0, vect_init(+1, 0));
+				move_dir = vect_init(+1, 0);
 				break;
 			// left arrow or 4
 			case(KEY_LEFT):	case(52):			// x -
-				ent_move(0, vect_init(0, -1));
+				move_dir = vect_init(0, -1);
 				break;
 
 			default:
 				break;
 		}
-
 		if (ch == 10) break;
+		ent_move(0, move_dir);
+
 
 		for (int ent_i = 1; ent_i < ent_num; ent_i++) {
 			ent_move(ent_i, basic_dir(ent_arr[ent_i]->pos, ent_arr[0]->pos));
