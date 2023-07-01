@@ -33,7 +33,7 @@ movement
 		https://github.com/CleverRaven/Cataclysm-DDA/blob/master/src/avatar_action.cpp#L152-L520
 
 CURRENT ORDER OF STUFF:
-(maze solving)
+maze solving - for entities
 	- djikstra's
 	- a*
 enemies
@@ -57,3 +57,7 @@ optimise the bin tree maze generator (if else statements)
 convert all positional things (height width) to positional vectors
 basic menu
 optimize basic_dir
+shorten all lines longer than 80
+attributes - strength, health
+refactoring
+show stats

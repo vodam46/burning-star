@@ -1,7 +1,6 @@
 # Basic Roguelike made by vodam46
 
 Just a basic game I'm trying to make for absolutely no reason other than "just because".
-(currently only a random movement showcase)
 
 For future features see [todo](todo) file
 
@@ -23,12 +22,12 @@ or (after compilation)
 ```sh
 ./out
 ```
-
-### Windows
-*coming soon, sorry*
-
-## Debug version
+### Debug version
 Runs the entire program inside gdb
 ```sh
 make debug
 ```
+
+### Windows
+*coming soon, sorry*
+

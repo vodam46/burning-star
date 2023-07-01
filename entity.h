@@ -9,13 +9,11 @@
 
 // entity struct
 typedef struct {
-	// position
-	vector pos;
-
-	// type
 	entity_type type;
+	vector pos;
+	int strength, maxhealth, health;
 } entity ;
 
-entity ent_init(vector _pos, entity_type _type);
+entity ent_init(vector _pos, entity_type _type, int _strength, int _health);
 
 #endif

@@ -52,7 +52,7 @@ clean:
 
 ## count the number of lines
 count: clean
-	wc *
+	cloc *
 
 ## run the program
 run: $(OUT)
