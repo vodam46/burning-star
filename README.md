@@ -1,6 +1,7 @@
 # Basic Roguelike made by vodam46
 
-Just a basic game I'm trying to make for absolutely no reason other than "just because".
+Just a basic game I'm trying to make for absolutely no reason other than
+"just because".
 
 For future features see [todo](todo) file
 

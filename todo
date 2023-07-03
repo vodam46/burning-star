@@ -19,7 +19,7 @@ drawing
 
 world data structure
 
-	make it infinite ( load chunks from a save file )
+	make it infinite (load chunks from a save file)
 
 	tile struct
 		- vehicles? (not needed (dont know if ill ever make vehiclec))
@@ -46,18 +46,17 @@ CONSISTENT NAMING STYLE
 file system
 
 make code readable -> longer variable names ?
-add a license (not need yet)
+add a license (not needed yet)
 start writing tests before its too late
 clean up the Makefile
-wasd key input? vi key input? numpad diagonal input? ( could be done through settings )
+wasd key input? vi key input? numpad diagonal input? (could be done through settings)
 	- settings
 make map struct
-movement into own file - entity or map?
-optimise the bin tree maze generator (if else statements)
-convert all positional things (height width) to positional vectors
+movement into own file
 basic menu
 optimize basic_dir
 shorten all lines longer than 80
 attributes - strength, health
 refactoring
 show stats
+get entity attrs from file

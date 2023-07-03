@@ -16,8 +16,7 @@
 
 // global variables
 int ch = 0;					// user input
-int width;					// width of the screen - x
-int height;					// height of the screen - y
+vector scr_size;
 tile** wmap;				// world map - array of arrays
 entity** ent_arr;			// entity array - array of pointers
 int ent_num = 0;
@@ -27,26 +26,33 @@ int ent_num = 0;
 void ent_action(int ent_arr_id, vector pos_change) {
 
 	vector old = ent_arr[ent_arr_id]->pos;
-	vector new = vect_add(ent_arr[ent_arr_id]->pos, pos_change); 
+	vector new = vect_add(ent_arr[ent_arr_id]->pos, pos_change);
 
-	// move only if new_pos is within the bounds of the screen and if the new tile isnt a wall
-	if (in_bounds(vect_init(new.y, new.x), vect_init(0, 0), vect_init(height, width))
-			&& wmap[new.y][new.x].type != wall) {
-		if (wmap[new.y][new.x].ent.type == none) {
-			
-			// copy the entity from old position to new position
-			wmap[new.y][new.x].ent = wmap[old.y][old.x].ent;					// copy to the new position
-			wmap[new.y][new.x].ent.pos.y = new.y;								// update the y position
-			wmap[new.y][new.x].ent.pos.x = new.x;								// update the x position
+        // move only if new_pos is within the bounds of the screen
+		// and if the new tile isnt a wall
+        if (in_bounds(vect_init(new.y, new.x),
+					vect_init(0, 0),
+					vect_init(scr_size.y, scr_size.x))
+				&& !vect_comp(old,new)) {
+			if (wmap[new.y][new.x].ent.type != none) { 
+				wmap[new.y][new.x].ent.health -= wmap[old.y][old.x].ent.strength;
+			}
+			else if (wmap[new.y][new.x].type != wall) {
+				if (wmap[new.y][new.x].ent.type == none) {
+					
+					// copy the entity from old position to new position
+					wmap[new.y][new.x].ent = wmap[old.y][old.x].ent;
+					wmap[new.y][new.x].ent.pos.y = new.y;
+					wmap[new.y][new.x].ent.pos.x = new.x;
 
-			// the entity from the old_position to the new positon
-			wmap[old.y][old.x].ent = ent_init(vect_init(old.y, old.x), none, 0, 0);
+					// the entity from the old_position to the new positon
+					wmap[old.y][old.x].ent = ent_init(vect_init(old.y, old.x),
+							none, 0, 0);
 
-			// update the entity array
-			ent_arr[ent_arr_id] = &wmap[new.y][new.x].ent;
-		} else if (wmap[new.y][new.x].ent.type != none) {
-			wmap[new.y][new.x].ent.health = wmap[new.y][new.x].ent.health - wmap[old.y][old.x].ent.strength;
-		}
+					// update the entity array
+					ent_arr[ent_arr_id] = &wmap[new.y][new.x].ent;
+				}
+			}
 	}
 }
 
@@ -62,15 +68,15 @@ int main() {
 	srand(time(NULL));
 	
 	// screen init
-	initscr();							// put screen into ncurses mode
-	keypad(stdscr, TRUE);				// expand the user input keys ( F keys, arrow keys)
-	getmaxyx(stdscr, height, width);	// set height and width to the height and width of the screen
+	initscr();
+	keypad(stdscr, TRUE);
+	getmaxyx(stdscr, scr_size.y, scr_size.x);
 
-	int player_y = 10;
-	int player_x = 10;
+	int player_y = (int)scr_size.y/2 + (scr_size.y%2==0 ? 0 : 1);
+	int player_x = (int)scr_size.x/2 + (scr_size.x%2==0 ? 0 : 1);
 
-	wmap = wmap_gen_bin_tree_maze(height, width);									// generate the map
-	ent_arr = malloc(height * width + 1 * sizeof(entity));	// dynamic allocation of the entity array
+	wmap = wmap_gen_bin_tree_maze(scr_size.y, scr_size.x);
+	ent_arr = malloc(scr_size.y * scr_size.x + 1 * sizeof(entity));
 
 	create_entity(vect_init(player_y, player_x), player, 5, 20);
 	create_entity(vect_init(1, 1), enemy, 1, 5);
@@ -78,8 +84,8 @@ int main() {
 	// main game loop
 	// exits only once input is 10 (ENTER key)
 	while (ch != 'q') {
-		draw_wmap(wmap, height, width);	// draws the map
-		move(height-1, width-1);
+		draw_wmap(wmap, scr_size);	// draws the map
+		move(scr_size.y-1, scr_size.x-1);
 		ch = getch();					// updates the user input
 
 		vector move_dir = vect_init(0,0);

@@ -68,11 +68,9 @@ tile** wmap_gen_bin_tree_maze(int rows, int cols) {
 				else {
 					wmap[y*2][x*2-1].type = empty;
 				}
-			}
-			else if (y > 0) {
+			} else if (y > 0) {
 				wmap[y*2-1][x*2].type = empty;
-			}
-			else if (x > 0) {
+			} else if (x > 0) {
 				wmap[y*2][x*2-1].type = empty;
 			}
 		}

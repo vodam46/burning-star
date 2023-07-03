@@ -15,6 +15,8 @@ vector vect_init(int y, int x);
 
 vector vect_add(vector left, vector right);
 
+int vect_comp(vector left, vector right);
+
 int in_bounds(vector pos, vector min, vector max);
 
 #endif

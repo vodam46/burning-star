@@ -17,6 +17,10 @@ vector vect_add(vector left, vector right) {
 	return ret_vect;
 }
 
+int vect_comp(vector left, vector right) {
+	return left.y == right.y && left.x == right.x;
+}
+
 // function to check if position is within boundaries
 int in_bounds(vector pos, vector min, vector max) {
 	return pos.y >= min.y && pos.y < max.y && pos.x >= min.x && pos.x < max.x;
