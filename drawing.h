@@ -9,6 +9,6 @@
 // custom libraries
 #include "tile.h"
 
-void draw_wmap(tile** wmap, vector scr_size);
+void draw(WINDOW* stdscr, WINDOW* main_scr, tile** wmap, vector scr_size, vector main_scr_size, char* msg);
 
 #endif

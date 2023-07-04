@@ -4,9 +4,7 @@ roguelike
 magic x computers - fusion?
 levels in the style of cdda (skills)
 
-
 http://roguebasin.com/index.php/How_to_Write_a_Roguelike_in_15_Steps
-
 
 CRITICAL:
 
@@ -41,22 +39,21 @@ enemies
 
 TODO:
 
+movement into own file
+start writing tests before its too late
+
 CONSISTENT NAMING STYLE
 
 file system
 
 make code readable -> longer variable names ?
 add a license (not needed yet)
-start writing tests before its too late
-clean up the Makefile
 wasd key input? vi key input? numpad diagonal input? (could be done through settings)
 	- settings
 make map struct
-movement into own file
 basic menu
 optimize basic_dir
 shorten all lines longer than 80
-attributes - strength, health
 refactoring
-show stats
 get entity attrs from file
+pathfinding - copy from python

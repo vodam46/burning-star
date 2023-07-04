@@ -6,13 +6,12 @@
 // custom libraries
 #include "ai.h"
 #include "vector.h"
-#include "math.h"
 
 
 vector random_movement() {
 	int direction = rand() % 4;
 
-	vector vect_dir;
+	vector vect_dir = vect_init(0,0);
 
 	switch(direction) {		
 		case(0):
@@ -27,10 +26,6 @@ vector random_movement() {
 		case(3):
 			vect_dir =  vect_init(0, -1);
 			break;
-		default:
-			vect_dir = vect_init(0, 0);
-			break;
-
 	}
 	return vect_dir;
 }
