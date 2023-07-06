@@ -23,10 +23,14 @@ or (after compilation)
 ```sh
 ./out
 ```
-### Debug version
+#### Debug version
 Runs the entire program inside gdb
 ```sh
 make debug
+```
+#### Unit tests
+```sh
+make test
 ```
 
 ### Windows

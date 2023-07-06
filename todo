@@ -39,8 +39,10 @@ enemies
 
 TODO:
 
+tests
+	- map
+
 movement into own file
-start writing tests before its too late
 
 CONSISTENT NAMING STYLE
 
@@ -57,3 +59,4 @@ shorten all lines longer than 80
 refactoring
 get entity attrs from file
 pathfinding - copy from python
+initialization macros ?

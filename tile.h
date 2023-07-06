@@ -19,4 +19,6 @@ typedef struct {
 
 tile tile_init(vector _pos, tile_type _type, entity _ent);
 
+int tile_comp(tile left, tile right);
+
 #endif

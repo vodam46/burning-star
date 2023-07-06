@@ -123,8 +123,6 @@ int main() {
 				break;
 		}
 		ent_action(wmap, ent_arr, 0, move_dir, main_scr_size);
-		if (ent_arr[0]->health <= 0)
-			break;
 
 		for (int ent_i = 1; ent_i < ent_num; ent_i++) {
 			if (ent_arr[ent_i]->health <= 0) {
@@ -138,6 +136,8 @@ int main() {
 			}
 			ent_action(wmap, ent_arr, ent_i, basic_dir(ent_arr[ent_i]->pos, ent_arr[0]->pos), main_scr_size);
 		}
+		if (ent_arr[0]->health <= 0)
+			break;
 	}
 
 	endwin();		// end ncurses mode

@@ -14,3 +14,7 @@ tile tile_init(vector _pos, tile_type _type, entity _ent) {
 	ret_tile.ent = _ent;
 	return ret_tile;
 }
+
+int tile_comp(tile left, tile right) {
+	return vect_comp(left.pos, right.pos) && left.type == right.type && ent_comp(left.ent, right.ent);
+}

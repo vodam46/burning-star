@@ -47,3 +47,8 @@ count: clean
 ## run the program
 run: $(OUT)
 	./$(OUT)
+
+## run tests
+test:
+	$(CC) test.c vector.c ai.c entity.c tile.c -o $(OUT)
+	./$(OUT)

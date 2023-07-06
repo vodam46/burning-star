@@ -16,4 +16,6 @@ typedef struct {
 
 entity ent_init(vector _pos, entity_type _type, int _strength, int _health);
 
+int ent_comp(entity left, entity right);
+
 #endif
