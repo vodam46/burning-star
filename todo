@@ -60,3 +60,4 @@ refactoring
 get entity attrs from file
 pathfinding - copy from python
 initialization macros ?
+basic menu - then generalize into a function
