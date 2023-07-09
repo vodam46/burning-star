@@ -11,10 +11,8 @@ typedef enum {
 } entity_type ;
 
 // for rendering entities
-static const char entity_char[] = {
-	' ',
-	'@',
-	'0',
-};
+extern const char entity_char[];
+
+extern const int entity_color[];
 
 #endif

@@ -10,9 +10,8 @@ typedef enum {
 } tile_type ;
 
 // array for rendering tiles
-static const char tile_char[] = {
-	' ',
-	'#',
-};
+extern const char* tile_char[];
+
+extern const int tile_color[];
 
 #endif

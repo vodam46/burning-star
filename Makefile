@@ -13,16 +13,22 @@ debug: clean
 	gdb out_debug
 
 $(OUT): main.o
-	$(CC) $(CFLAGS) main.o entity.o tile.o map.o drawing.o vector.o ai.o -lncurses -o $(OUT)
+	$(CC) $(CFLAGS) main.o entity.o tile.o map.o drawing.o vector.o ai.o entity_type.o tile_type.o -lncurses -o $(OUT)
 
 main.o: main.c tile.o entity.o map.o vector.o ai.o drawing.o tile_type.h
 	$(CC) $(CFLAGS) -c main.c
 
-entity.o: entity.c entity.h entity_type.h vector.o
+entity.o: entity.c entity.h entity_type.o vector.o
 	$(CC) $(CFLAGS) -c entity.c
 	
-tile.o: tile.c tile.h tile_type.h entity.o vector.o
+tile.o: tile.c tile.h tile_type.o entity.o vector.o
 	$(CC) $(CFLAGS) -c tile.c
+
+tile_type.o: tile_type.h tile_type.c
+	$(CC) $(CFLAGS) -c tile_type.c
+
+entity_type.o: entity_type.h entity_type.c
+	$(CC) $(CFLAGS) -c entity_type.c
 
 map.o: map.c map.h tile.o entity.o vector.o tile_type.h
 	$(CC) $(CFLAGS) -c map.c

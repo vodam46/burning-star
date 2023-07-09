@@ -6,7 +6,7 @@
 #include "entity.h"
 #include "tile.h"
 
-#define assert(test) tests_run++; if(!(test)) { tests_failed++; printf("%s\n",#test); };
+#define assert(test) tests_run++; if(!(test)) { tests_failed++; printf("%s:%d %s\n",__FILE__,__LINE__,#test); };
 
 int main() {
 	int tests_run = 0;

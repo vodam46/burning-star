@@ -13,11 +13,15 @@ void draw_main_scr(WINDOW* main_scr, tile** wmap, vector scr_size) {
 	for (int y = 0; y < scr_size.y; y++) {
 		for (int x = 0; x < scr_size.x; x++) {
 			// if entity - use entity char, else use tile char
+			wmove(main_scr,y,x);
 			if (wmap[y][x].ent.type != none) {
-				mvwaddch(main_scr, y, x, entity_char[wmap[y][x].ent.type]);
-			}
-			else if (wmap[y][x].type != empty) {
-				mvwaddch(main_scr, y, x, tile_char[wmap[y][x].type]);
+				wattron(main_scr, COLOR_PAIR(entity_color[wmap[y][x].ent.type]));
+				waddch(main_scr, entity_char[wmap[y][x].ent.type]);
+				wattroff(main_scr, COLOR_PAIR(entity_color[wmap[y][x].ent.type]));
+			} else if (wmap[y][x].type != empty) {
+				wattron(main_scr, COLOR_PAIR(tile_color[wmap[y][x].ent.type]));
+				waddstr(main_scr, tile_char[wmap[y][x].type]);
+				wattroff(main_scr, COLOR_PAIR(tile_color[wmap[y][x].ent.type]));
 			}
 		}
 	}
@@ -26,13 +30,13 @@ void draw_main_scr(WINDOW* main_scr, tile** wmap, vector scr_size) {
 
 void draw_border(WINDOW* stdscr, vector scr_size) {
 	for (int y = 0; y < scr_size.y; y++) {
-		mvwaddch(stdscr, y, 0, '#');
-		mvwaddch(stdscr, y, scr_size.x-1, '#');
+		mvwaddstr(stdscr, y, 0, "█");
+		mvwaddstr(stdscr, y, scr_size.x-1, "█");
 	}
 	for (int x = 0; x < scr_size.x; x++) {
-		mvwaddch(stdscr, 0, x, '#');
-		mvwaddch(stdscr, 2, x, '#');
-		mvwaddch(stdscr, scr_size.y-1, x, '#');
+		mvwaddstr(stdscr, 0, x, "█");
+		mvwaddstr(stdscr, 2, x, "█");
+		mvwaddstr(stdscr, scr_size.y-1, x, "█");
 	}
 }
 

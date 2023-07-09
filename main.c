@@ -5,6 +5,7 @@
 #include <time.h>
 #include <string.h>
 #include <unistd.h>
+#include <locale.h>
 
 // custom libraries
 #include "tile.h"
@@ -59,25 +60,31 @@ void create_entity(tile** wmap, entity** ent_arr, vector pos, entity_type _type,
 
 int main() {
 	srand(time(NULL));
+	setlocale(LC_ALL, "");
 
 	// screen init
 	initscr();
+	start_color();
 	keypad(stdscr, TRUE);
 	vector scr_size;
 	getmaxyx(stdscr, scr_size.y, scr_size.x);
 	vector main_scr_size = vect_init(scr_size.y-4,scr_size.x-2);
 
-	WINDOW* main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
+	// colors
+	init_pair(0,COLOR_WHITE,COLOR_BLACK);
+	init_pair(1,COLOR_RED,COLOR_YELLOW);
+	init_pair(2,COLOR_GREEN,COLOR_BLACK);
 
-	int player_y = (int)(main_scr_size.y/2) + (main_scr_size.y%2==0 ? 0 : 1);
-	int player_x = (int)(main_scr_size.x/2) + (main_scr_size.x%2==0 ? 1 : 0);
-	char msg[256] = "";
+	WINDOW* main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
 
 	// tile** wmap = wmap_gen(main_scr_size.y, main_scr_size.x);
 	tile** wmap = wmap_gen_bin_tree_maze(main_scr_size.y, main_scr_size.x);
 	entity** ent_arr = malloc(main_scr_size.y * main_scr_size.x * sizeof(entity));
 
-	create_entity(wmap, ent_arr, vect_init(player_y, player_x), player, 5, 20);
+	vector middle = vect_init((int)(main_scr_size.y/2), (int)(main_scr_size.x/2));
+	char msg[256] = "";
+
+	create_entity(wmap, ent_arr, vect_init(middle.y+(middle.y%2==0?0:1),middle.x+(middle.x%2==0?0:1)), player, 5, 20);
 
 	int turn_count = 0;
 	int ent_killed = 0;
@@ -150,8 +157,10 @@ int main() {
 				}
 				ent_action(wmap, ent_arr, ent_i, basic_dir(ent_arr[ent_i]->pos, ent_arr[0]->pos), main_scr_size);
 			}
+
 			if (ent_arr[0]->health <= 0)
 				break;
+
 			if (turn_count%10 == 0) {
 				create_entity(wmap,ent_arr,vect_init((rand()%((int)main_scr_size.y/2))*2,(rand()%((int)main_scr_size.x/2)*2)),enemy,1,5);
 			}
@@ -160,10 +169,10 @@ int main() {
 		}
 	}
 	clear();
-	sprintf(msg,"You died, score: %d", ent_killed);
-	mvprintw((int)scr_size.y/2,(int)scr_size.x/2-(int)strlen(msg)/2,"You died, score: %d", ent_killed);
+	sprintf(msg,"You died, score: %d, turns played: %d", ent_killed, turn_count);
+	mvprintw((int)scr_size.y/2,(int)scr_size.x/2-(int)strlen(msg)/2,"%s",msg);
 	refresh();
-	sleep(1);
+	// sleep(1);
 	getch();
 
 

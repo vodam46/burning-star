@@ -61,3 +61,6 @@ get entity attrs from file
 pathfinding - copy from python
 initialization macros ?
 basic menu - then generalize into a function
+better wall drawing
+extern the tile and entity types - or fix
+fix enemy spawning at player position
