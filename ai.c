@@ -8,7 +8,7 @@
 #include "vector.h"
 
 
-vector random_movement() {
+vector random_movement(void) {
 	int direction = rand() % 4;
 
 	vector vect_dir = vect_init(0,0);

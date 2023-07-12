@@ -1,60 +1,38 @@
 
 CC=cc
-OUT=out
-OUT_DEBUG=out_debug
+# CC=clang
+OUT=basic-roguelike
+OUT_DEBUG=$(OUT)-debug
 CFLAGS=-Wall -Wextra -pedantic
+
+sources=action.c ai.c drawing.c entity.c entity_type.c main.c map.c menu.c tile.c tile_type.c vector.c
 
 .PHONY: default debug clean count run
 
 default: $(OUT)
-
-debug: clean
-	make 'CFLAGS=$(CFLAGS) -g' OUT=$(OUT_DEBUG)
-	gdb out_debug
-
-$(OUT): main.o
-	$(CC) $(CFLAGS) main.o entity.o tile.o map.o drawing.o vector.o ai.o entity_type.o tile_type.o -lncurses -o $(OUT)
-
-main.o: main.c tile.o entity.o map.o vector.o ai.o drawing.o tile_type.h
-	$(CC) $(CFLAGS) -c main.c
-
-entity.o: entity.c entity.h entity_type.o vector.o
-	$(CC) $(CFLAGS) -c entity.c
-	
-tile.o: tile.c tile.h tile_type.o entity.o vector.o
-	$(CC) $(CFLAGS) -c tile.c
-
-tile_type.o: tile_type.h tile_type.c
-	$(CC) $(CFLAGS) -c tile_type.c
-
-entity_type.o: entity_type.h entity_type.c
-	$(CC) $(CFLAGS) -c entity_type.c
-
-map.o: map.c map.h tile.o entity.o vector.o tile_type.h
-	$(CC) $(CFLAGS) -c map.c
-
-drawing.o: drawing.c drawing.h tile.o
-	$(CC) $(CFLAGS) -c drawing.c
-
-vector.o: vector.c vector.h
-	$(CC) $(CFLAGS) -c vector.c
-
-ai.o: ai.c ai.h vector.o 
-	$(CC) $(CFLAGS) -c ai.c
-
-## remove the object file and the binary file
 clean:
-	@rm -Rf *.o $(OUT) $(OUT_DEBUG)
-
-## count the number of lines
-count: clean
-	cloc *
-
-## run the program
+	-rm -Rf *.o *.d $(OUT) $(OUT_DEBUG)
 run: $(OUT)
 	./$(OUT)
-
-## run tests
-test:
+debug: clean
+	make 'CFLAGS=$(CFLAGS) -g' OUT=$(OUT_DEBUG)
+	gdb $(OUT_DEBUG)
+count: clean
+	cloc *
+test: clean
 	$(CC) test.c vector.c ai.c entity.c tile.c -o $(OUT)
 	./$(OUT)
+
+%.d: %.c
+	$(CC) $(CFLAGS) -M $^ > $@
+
+ifeq (,$(filter clean, $(MAKECMDGOALS)))
+include $(sources:.c=.d)
+endif
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OUT): $(sources:.c=.o)
+	$(CC) $(CFLAGS) -lncurses -o $@ $^
+

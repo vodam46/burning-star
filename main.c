@@ -15,50 +15,10 @@
 #include "drawing.h"
 #include "vector.h"
 #include "ai.h"
+#include "menu.h"
+#include "action.h"
 
-
-// global variables
-int ent_num = 0;
-
-
-// move entity from old_pos to new_pos, ent_arr_id is the position in ent_arr
-int ent_action(tile** wmap, entity** ent_arr, int ent_arr_id, vector pos_change, vector scr_size) {
-	vector old = ent_arr[ent_arr_id]->pos;
-	vector new = vect_add(ent_arr[ent_arr_id]->pos, pos_change);
-
-	// move only if new_pos is within the bounds of the screen
-	// and if the new tile isnt a wall
-	int user_moved = 0;
-	if (in_bounds(vect_init(new.y, new.x), vect_init(0, 0), scr_size) && !vect_comp(old,new)) {
-		if (wmap[new.y][new.x].ent.type != none) { 
-			wmap[new.y][new.x].ent.health -= wmap[old.y][old.x].ent.strength;
-			user_moved = 1;
-		}
-		if (wmap[new.y][new.x].type != wall && wmap[new.y][new.x].ent.type == none) {
-
-			// copy the entity from old position to new position
-			wmap[new.y][new.x].ent = wmap[old.y][old.x].ent;
-			wmap[new.y][new.x].ent.pos.y = new.y;
-			wmap[new.y][new.x].ent.pos.x = new.x;
-
-			// the entity from the old_position to the new positon
-			wmap[old.y][old.x].ent = ent_init(vect_init(old.y, old.x), none, 0, 0);
-
-			// update the entity array
-			ent_arr[ent_arr_id] = &wmap[new.y][new.x].ent;
-			user_moved = 1;
-		}
-	}
-	return user_moved;
-}
-
-void create_entity(tile** wmap, entity** ent_arr, vector pos, entity_type _type, int _strength, int _health) {
-	wmap[pos.y][pos.x].ent = ent_init(pos,_type,_strength,_health);
-	ent_arr[ent_num] = &wmap[pos.y][pos.x].ent;
-	ent_num++;
-}
-
-int main() {
+int main(void) {
 	srand(time(NULL));
 	setlocale(LC_ALL, "");
 
@@ -75,16 +35,29 @@ int main() {
 	init_pair(1,COLOR_RED,COLOR_YELLOW);
 	init_pair(2,COLOR_GREEN,COLOR_BLACK);
 
+	char* map_options[] = {
+		"Empty map",
+		"Maze"
+	};
+	int map_choice = menu(stdscr, scr_size, "Test", map_options, sizeof(map_options)/sizeof(*map_options));
+
 	WINDOW* main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
 
-	// tile** wmap = wmap_gen(main_scr_size.y, main_scr_size.x);
-	tile** wmap = wmap_gen_bin_tree_maze(main_scr_size.y, main_scr_size.x);
-	entity** ent_arr = malloc(main_scr_size.y * main_scr_size.x * sizeof(entity));
-
+	tile** wmap;
+	if (map_choice == 0) {
+		wmap = wmap_gen(main_scr_size.y, main_scr_size.x);
+	} else if (map_choice == 1) {
+		wmap = wmap_gen_bin_tree_maze(main_scr_size.y, main_scr_size.x);
+	} else {
+		wmap = wmap_gen(main_scr_size.y, main_scr_size.x);
+	}
 	vector middle = vect_init((int)(main_scr_size.y/2), (int)(main_scr_size.x/2));
 	char msg[256] = "";
 
-	create_entity(wmap, ent_arr, vect_init(middle.y+(middle.y%2==0?0:1),middle.x+(middle.x%2==0?0:1)), player, 5, 20);
+	entity** ent_arr = malloc(main_scr_size.y * main_scr_size.x * sizeof(entity));
+	int ent_num = 0;
+
+	ent_num = create_entity(wmap, ent_arr, ent_num, vect_init(middle.y+(middle.y%2==0?0:1),middle.x+(middle.x%2==0?0:1)), player, 5, 20);
 
 	int turn_count = 0;
 	int ent_killed = 0;
@@ -162,7 +135,11 @@ int main() {
 				break;
 
 			if (turn_count%10 == 0) {
-				create_entity(wmap,ent_arr,vect_init((rand()%((int)main_scr_size.y/2))*2,(rand()%((int)main_scr_size.x/2)*2)),enemy,1,5);
+				if (map_choice) {
+					ent_num=create_entity(wmap,ent_arr,ent_num,vect_init((rand()%main_scr_size.y),(rand()%main_scr_size.x)),enemy,1,5);
+				} else {
+					ent_num=create_entity(wmap,ent_arr,ent_num,vect_init((rand()%((int)main_scr_size.y/2))*2,(rand()%((int)main_scr_size.x/2)*2)),enemy,1,5);
+				}
 			}
 
 			turn_count++;

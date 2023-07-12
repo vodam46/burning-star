@@ -42,8 +42,8 @@ void draw_border(WINDOW* stdscr, vector scr_size) {
 
 void draw(WINDOW* stdscr, WINDOW* main_scr, tile** wmap, vector scr_size, vector main_scr_size, char* msg) {
 	clear();
-	mvwaddstr(stdscr, 1,2,msg);
 	draw_border(stdscr,scr_size);
+	mvwaddstr(stdscr, 1,2,msg);
 	wrefresh(stdscr);
 	draw_main_scr(main_scr, wmap, main_scr_size);
 }

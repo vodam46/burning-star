@@ -1,4 +1,3 @@
-
 GENERAL INFO
 roguelike
 magic x computers - fusion?
@@ -9,10 +8,11 @@ http://roguebasin.com/index.php/How_to_Write_a_Roguelike_in_15_Steps
 CRITICAL:
 
 windows installation
+https://stackoverflow.com/questions/66063363/how-to-compile-ncurses-program-for-native-windows-use
+graphic? - raylib, sdl
 
 drawing
 	how to deal with different window sizes
-		- change map size ?
 		- generate a larger map, but draw only a portion of it (endless levels)
 
 world data structure
@@ -39,6 +39,8 @@ enemies
 
 TODO:
 
+basic menu - then generalize into a function
+
 tests
 	- map
 
@@ -53,14 +55,12 @@ add a license (not needed yet)
 wasd key input? vi key input? numpad diagonal input? (could be done through settings)
 	- settings
 make map struct
-basic menu
 optimize basic_dir
 shorten all lines longer than 80
 refactoring
 get entity attrs from file
-pathfinding - copy from python
 initialization macros ?
-basic menu - then generalize into a function
 better wall drawing
-extern the tile and entity types - or fix
 fix enemy spawning at player position
+steal pathfinding and better maze gen alg from /home/vodam/c-maze-generation
+different (stronger) enemy type

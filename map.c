@@ -16,7 +16,7 @@ tile** wmap_gen(int rows, int cols) {
 	tile** wmap = malloc(rows * sizeof(tile));	// allocate the 2d array
 
 	for (int y=0; y<rows; y++) {
-		wmap[y] = calloc(cols, sizeof(tile));		// allocate each array of the 2d array
+		wmap[y] = malloc(cols * sizeof(tile));		// allocate each array of the 2d array
 		for (int x=0; x<cols; x++) {
 			// set the variables for each tile
 			wmap[y][x].pos.y = y;								// y position
@@ -32,7 +32,7 @@ tile** wmap_gen_tile(int rows, int cols, tile_type _type) {
 	tile** wmap = malloc(rows * sizeof(tile));	// allocate the 2d array
 
 	for (int y=0; y<rows; y++) {
-		wmap[y] = calloc(cols, sizeof(tile));		// allocate each array of the 2d array
+		wmap[y] = malloc(cols * sizeof(tile));		// allocate each array of the 2d array
 		for (int x=0; x<cols; x++) {
 			// set the variables for each tile
 			wmap[y][x].pos.y = y;								// y position
