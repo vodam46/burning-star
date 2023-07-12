@@ -6,7 +6,7 @@
 #include "entity.h"
 #include "tile.h"
 
-#define assert(test) tests_run++; if(!(test)) { tests_failed++; printf("❌ %s:%d %s\n",__FILE__,__LINE__,#test); };
+#define assert(test) tests_run++; if(!(test)) { tests_failed++; printf("\033[0;31mX\033[0m %s:%d %s\n",__FILE__,__LINE__,#test); };
 
 int main() {
 	int tests_run = 0;
@@ -33,5 +33,7 @@ int main() {
 
 	if (tests_failed == 0)
 		printf("✅ ");
+	else
+		printf("\033[0;31mX\033[0m ");
 	printf("tests run: %d\ntests passed: %d\n",tests_run, tests_run-tests_failed);
 }

@@ -39,16 +39,12 @@ enemies
 
 TODO:
 
-basic menu - then generalize into a function
+get entity attrs from file
 
 tests
 	- map
 
-movement into own file
-
 CONSISTENT NAMING STYLE
-
-file system
 
 make code readable -> longer variable names ?
 add a license (not needed yet)
@@ -58,7 +54,6 @@ make map struct
 optimize basic_dir
 shorten all lines longer than 80
 refactoring
-get entity attrs from file
 initialization macros ?
 better wall drawing
 fix enemy spawning at player position

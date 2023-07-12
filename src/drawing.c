@@ -47,3 +47,14 @@ void draw(WINDOW* stdscr, WINDOW* main_scr, tile** wmap, vector scr_size, vector
 	wrefresh(stdscr);
 	draw_main_scr(main_scr, wmap, main_scr_size);
 }
+
+void menu_draw(WINDOW* stdscr, char* prompt, char** options, int num_options, int cur_option) {
+	wclear(stdscr);
+	wprintw(stdscr, "%s", prompt);
+	for (int i = 0; i < num_options; i++) {
+		mvwprintw(stdscr, i+1, 0, "[ ] %s", options[i]);
+	}
+	mvwaddch(stdscr,cur_option+1,1,'#');
+	wmove(stdscr, cur_option+1, 1);
+	wrefresh(stdscr);
+}

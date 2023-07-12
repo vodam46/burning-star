@@ -1,7 +1,7 @@
 
 CC=cc
 # CC=clang
-OUT=basic-roguelike
+OUT=bin/basic-roguelike
 OUT_DEBUG=$(OUT)-debug
 CFLAGS=-Wall -Wextra -pedantic
 
@@ -11,28 +11,30 @@ sources=action.c ai.c drawing.c entity.c entity_type.c main.c map.c menu.c tile.
 
 default: $(OUT)
 clean:
-	-rm -Rf *.o *.d $(OUT) $(OUT_DEBUG)
+	-rm -Rf obj dep bin
 run: $(OUT)
 	./$(OUT)
 debug: clean
 	make 'CFLAGS=$(CFLAGS) -g' OUT=$(OUT_DEBUG)
 	gdb $(OUT_DEBUG)
-count: clean
-	cloc *
-test: clean
-	$(CC) test.c vector.c ai.c entity.c tile.c -o $(OUT)
-	./$(OUT)
+count:
+	cloc src/*
+test: clean | dep obj bin
+	$(CC) -lncurses $(addprefix src/, $(filter-out main.c, $(sources))) src/test.c -o bin/test
+	./bin/test
 
-%.d: %.c
-	$(CC) $(CFLAGS) -M $^ > $@
-
-ifeq (,$(filter clean, $(MAKECMDGOALS)))
-include $(sources:.c=.d)
+ifeq (,$(filter $(MAKECMDGOALS), clean count))
+include $(addprefix dep/, $(sources:.c=.d))
 endif
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+dep/%.d: src/%.c | dep
+	$(CC) $(CFLAGS) -M $^ > $@
 
-$(OUT): $(sources:.c=.o)
+obj/%.o: src/%.c | obj
+	$(CC) $(CFLAGS) -c -o $@ $(realpath $<)
+
+obj dep bin:
+	mkdir -p $@
+
+$(OUT): $(addprefix obj/, $(sources:.c=.o)) | bin
 	$(CC) $(CFLAGS) -lncurses -o $@ $^
-

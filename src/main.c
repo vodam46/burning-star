@@ -40,6 +40,10 @@ int main(void) {
 		"Maze"
 	};
 	int map_choice = menu(stdscr, scr_size, "Test", map_options, sizeof(map_options)/sizeof(*map_options));
+	if (map_choice == -1) {
+		endwin();
+		return 1;
+	}
 
 	WINDOW* main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
 
@@ -135,11 +139,15 @@ int main(void) {
 				break;
 
 			if (turn_count%10 == 0) {
+				vector new_enemy_pos;
 				if (map_choice) {
-					ent_num=create_entity(wmap,ent_arr,ent_num,vect_init((rand()%main_scr_size.y),(rand()%main_scr_size.x)),enemy,1,5);
+					new_enemy_pos = vect_init((rand()%((int)main_scr_size.y/2))*2,(rand()%((int)main_scr_size.x/2)*2));
 				} else {
-					ent_num=create_entity(wmap,ent_arr,ent_num,vect_init((rand()%((int)main_scr_size.y/2))*2,(rand()%((int)main_scr_size.x/2)*2)),enemy,1,5);
+					new_enemy_pos = vect_init((rand()%main_scr_size.y),(rand()%main_scr_size.x));
 				}
+				if (vect_comp(new_enemy_pos, ent_arr[0]->pos))
+					new_enemy_pos = vect_init(rand()%2*main_scr_size.y,rand()%2*main_scr_size.x);
+				ent_num=create_entity(wmap,ent_arr,ent_num,new_enemy_pos,enemy,1,5);
 			}
 
 			turn_count++;
