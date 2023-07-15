@@ -5,6 +5,8 @@
 #include "ai.h"
 #include "entity.h"
 #include "tile.h"
+#include "map.h"
+#include "action.h"
 
 #define assert(test) tests_run++; if(!(test)) { tests_failed++; printf("\033[0;31mX\033[0m %s:%d %s\n",__FILE__,__LINE__,#test); };
 
@@ -23,12 +25,22 @@ int main() {
 
 	// entity
 	assert(ent_comp(
-				ent_init(vect_init(0,0),player,1,1),
+				ent_init(vect_init(0,0),player,1,1,1),
 				(entity){player,(vector){0,0},1,1,1}));
 
+	// entity creation
+	entities_init();
+	tile** wmap = wmap_gen(1,1);
+	entity** ent_arr = malloc(sizeof(entity));
+	int ent_num = 0;
+	assert(create_entity(wmap,ent_arr,ent_num,vect_init(0,0),player)==1);
+	assert(ent_comp(wmap[0][0].ent,ent_init(vect_init(0,0),player,5,20,20)));
+
 	// tile
+	tiles_init();
+	assert(tile_data[1].tile.type == wall);
 	assert(tile_comp(
-				tile_init(vect_init(0,0),empty,ent_init(vect_init(0,0),player,1,1)),
+				tile_init(vect_init(0,0),empty,ent_init(vect_init(0,0),player,1,1,1)),
 				(tile){(vector){0,0},empty,(entity){player,(vector){0,0},1,1,1}}));
 
 	if (tests_failed == 0)

@@ -15,13 +15,13 @@ void draw_main_scr(WINDOW* main_scr, tile** wmap, vector scr_size) {
 			// if entity - use entity char, else use tile char
 			wmove(main_scr,y,x);
 			if (wmap[y][x].ent.type != none) {
-				wattron(main_scr, COLOR_PAIR(entity_color[wmap[y][x].ent.type]));
-				waddch(main_scr, entity_char[wmap[y][x].ent.type]);
-				wattroff(main_scr, COLOR_PAIR(entity_color[wmap[y][x].ent.type]));
+				wattron(main_scr, COLOR_PAIR(wmap[y][x].ent.type));
+				waddstr(main_scr, ent_data[wmap[y][x].ent.type].entity_char);
+				wattroff(main_scr, COLOR_PAIR(wmap[y][x].ent.type));
 			} else if (wmap[y][x].type != empty) {
-				wattron(main_scr, COLOR_PAIR(tile_color[wmap[y][x].ent.type]));
-				waddstr(main_scr, tile_char[wmap[y][x].type]);
-				wattroff(main_scr, COLOR_PAIR(tile_color[wmap[y][x].ent.type]));
+				wattron(main_scr, COLOR_PAIR(tile_data[wmap[y][x].ent.type].tile_color));
+				waddstr(main_scr, tile_data[wmap[y][x].type].tile_char);
+				wattroff(main_scr, COLOR_PAIR(tile_data[wmap[y][x].ent.type].tile_color));
 			}
 		}
 	}

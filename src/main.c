@@ -11,7 +11,6 @@
 #include "tile.h"
 #include "entity.h"
 #include "map.h"
-#include "entity_type.h"
 #include "drawing.h"
 #include "vector.h"
 #include "ai.h"
@@ -21,6 +20,9 @@
 int main(void) {
 	srand(time(NULL));
 	setlocale(LC_ALL, "");
+
+	entities_init();
+	tiles_init();
 
 	// screen init
 	initscr();
@@ -32,8 +34,8 @@ int main(void) {
 
 	// colors
 	init_pair(0,COLOR_WHITE,COLOR_BLACK);
-	init_pair(1,COLOR_RED,COLOR_YELLOW);
-	init_pair(2,COLOR_GREEN,COLOR_BLACK);
+	init_pair(1,COLOR_GREEN,COLOR_BLACK);
+	init_pair(2,COLOR_RED,COLOR_YELLOW);
 
 	char* map_options[] = {
 		"Empty map",
@@ -61,7 +63,7 @@ int main(void) {
 	entity** ent_arr = malloc(main_scr_size.y * main_scr_size.x * sizeof(entity));
 	int ent_num = 0;
 
-	ent_num = create_entity(wmap, ent_arr, ent_num, vect_init(middle.y+(middle.y%2==0?0:1),middle.x+(middle.x%2==0?0:1)), player, 5, 20);
+	ent_num = create_entity(wmap, ent_arr, ent_num, vect_init(middle.y+(middle.y%2==0?0:1),middle.x+(middle.x%2==0?0:1)), player);
 
 	int turn_count = 0;
 	int ent_killed = 0;
@@ -147,7 +149,7 @@ int main(void) {
 				}
 				if (vect_comp(new_enemy_pos, ent_arr[0]->pos))
 					new_enemy_pos = vect_init(rand()%2*main_scr_size.y,rand()%2*main_scr_size.x);
-				ent_num=create_entity(wmap,ent_arr,ent_num,new_enemy_pos,enemy,1,5);
+				ent_num=create_entity(wmap,ent_arr,ent_num,new_enemy_pos,enemy);
 			}
 
 			turn_count++;

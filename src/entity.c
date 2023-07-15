@@ -1,20 +1,62 @@
 
 // global libraries
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // custom libraries
 #include "entity.h"
-#include "entity_type.h"
 #include "vector.h"
 
+const char* ent_name[] = {
+	"none",
+	"player",
+	"enemy",
+};
+entity_data ent_data[3] = {0};
+void entities_init() {
+	char data_dir[100];
+	strcpy(data_dir, PROJECT_DIR);
+	strcat(data_dir,"/data/entity/");
+	for (int i = 1; i < last_ent; i++) {
+		char file_name[100];
+		strcpy(file_name, data_dir);
+		strcat(file_name, ent_name[i]);
+
+		FILE* file = fopen(file_name, "r");
+
+		ent_data[i].ent.type = i;
+		char* line = NULL;
+		size_t len = 0;
+		getline(&line, &len, file); // name
+
+		getline(&line, &len, file); // char
+		ent_data[i].entity_char = malloc(len*sizeof(char));
+		strcpy(ent_data[i].entity_char, line);
+
+		getline(&line, &len, file); // hp
+		int hp = atoi(line);
+		ent_data[i].ent.health = hp;
+		ent_data[i].ent.maxhealth = hp;
+
+		getline(&line, &len, file); // strength
+		ent_data[i].ent.strength = atoi(line);
+
+		// getline(&line, &len, file); // color
+		// ent_data[i].entity_color = atoi(line);
+
+		fclose(file);
+	}
+}
+
 // entity init function
-entity ent_init(vector _pos, entity_type _type, int _strength, int _health) {
+entity ent_init(vector pos, entity_type type, int strength, int maxhealth, int health) {
 	entity ret_ent;
-	ret_ent.pos = _pos;
-	ret_ent.type = _type;
-	ret_ent.strength = _strength;
-	ret_ent.maxhealth = _health;
-	ret_ent.health = _health;
+	ret_ent.pos = pos;
+	ret_ent.type = type;
+	ret_ent.strength = strength;
+	ret_ent.maxhealth = maxhealth;
+	ret_ent.health = health;
 	return ret_ent;
 }
 

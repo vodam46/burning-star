@@ -23,7 +23,7 @@ int ent_action(tile** wmap, entity** ent_arr, int ent_arr_id, vector pos_change,
 			wmap[new.y][new.x].ent.pos.x = new.x;
 
 			// the entity from the old_position to the new positon
-			wmap[old.y][old.x].ent = ent_init(vect_init(old.y, old.x), none, 0, 0);
+			wmap[old.y][old.x].ent = ent_init(vect_init(old.y, old.x), none, 0, 0, 0);
 
 			// update the entity array
 			ent_arr[ent_arr_id] = &wmap[new.y][new.x].ent;
@@ -33,8 +33,9 @@ int ent_action(tile** wmap, entity** ent_arr, int ent_arr_id, vector pos_change,
 	return user_moved;
 }
 
-int create_entity(tile** wmap, entity** ent_arr, int ent_num, vector pos, entity_type _type, int _strength, int _health) {
-	wmap[pos.y][pos.x].ent = ent_init(pos,_type,_strength,_health);
+int create_entity(tile** wmap, entity** ent_arr, int ent_num, vector pos, entity_type type) {
+	wmap[pos.y][pos.x].ent = ent_data[type].ent;
+	wmap[pos.y][pos.x].ent.pos = pos;
 	ent_arr[ent_num] = &wmap[pos.y][pos.x].ent;
 	ent_num++;
 	return ent_num;

@@ -6,7 +6,6 @@
 #include "tile.h"
 #include "entity.h"
 #include "map.h"
-#include "tile_type.h"
 
 // world generation
 // rows is the height
@@ -27,7 +26,7 @@ tile** wmap_gen(int rows, int cols) {
 	return wmap;
 }
 
-tile** wmap_gen_tile(int rows, int cols, tile_type _type) {
+tile** wmap_gen_tile(int rows, int cols, tile_type type) {
 
 	tile** wmap = malloc(rows * sizeof(tile));	// allocate the 2d array
 
@@ -37,7 +36,7 @@ tile** wmap_gen_tile(int rows, int cols, tile_type _type) {
 			// set the variables for each tile
 			wmap[y][x].pos.y = y;								// y position
 			wmap[y][x].pos.x = x;								// x position
-			wmap[y][x].type = _type;								// type of tile
+			wmap[y][x].type = type;								// type of tile
 		}
 	}
 	return wmap;

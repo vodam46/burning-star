@@ -5,19 +5,31 @@
 
 // custom libraries
 #include "entity.h"
-#include "tile_type.h"
 
-// tile structure
-// x y position
-// type of tile
-// entity on tile
+// type of tiles
+typedef enum {
+	empty,
+	wall,
+	last_tile,
+} tile_type ;
+
+// array for rendering tiles
+extern const char* tile_name[];
 typedef struct {
 	vector pos;
 	tile_type type;
 	entity ent;
-} tile ;
+} tile;
+typedef struct {
+	tile tile;
+	char* tile_char;
+	int tile_color;
+} til_data;
+extern til_data tile_data[last_tile];
 
-tile tile_init(vector _pos, tile_type _type, entity _ent);
+void tiles_init();
+
+tile tile_init(vector pos, tile_type type, entity ent);
 
 int tile_comp(tile left, tile right);
 

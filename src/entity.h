@@ -4,17 +4,35 @@
 #define ENTITY_H
 
 // custom libraries
-#include "entity_type.h"
 #include "vector.h"
+
+// entity types
+typedef enum {
+	none,
+	player,
+	enemy,
+	last_ent,
+} entity_type ;
+
+extern const char* ent_name[];
 
 // entity struct
 typedef struct {
 	entity_type type;
 	vector pos;
 	int strength, maxhealth, health;
-} entity ;
+} entity;
 
-entity ent_init(vector _pos, entity_type _type, int _strength, int _health);
+typedef struct {
+	entity ent;
+	char* entity_char;
+	int entity_color;
+} entity_data;
+extern entity_data ent_data[last_ent];
+
+void entities_init();
+
+entity ent_init(vector pos, entity_type type, int strength, int maxhealth, int health);
 
 int ent_comp(entity left, entity right);
 

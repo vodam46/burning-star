@@ -2,10 +2,10 @@
 CC=cc
 # CC=clang
 OUT=bin/basic-roguelike
-OUT_DEBUG=$(OUT)-debug
-CFLAGS=-Wall -Wextra -pedantic
+OUT_DEBUG=bin/basic-roguelike-debug
+CFLAGS=-Wall -Wextra -pedantic -DPROJECT_DIR='"$(shell pwd)"'
 
-sources=action.c ai.c drawing.c entity.c entity_type.c main.c map.c menu.c tile.c tile_type.c vector.c
+sources=action.c ai.c drawing.c entity.c main.c map.c menu.c tile.c vector.c
 
 .PHONY: default debug clean count run
 
@@ -14,16 +14,18 @@ clean:
 	-rm -Rf obj dep bin
 run: $(OUT)
 	./$(OUT)
-debug: clean
-	make 'CFLAGS=$(CFLAGS) -g' OUT=$(OUT_DEBUG)
-	gdb $(OUT_DEBUG)
+debug: CFLAGS+=-g
+debug: OUT=$(OUT_DEBUG)
+debug:  | obj dep bin
+	$(CC) $(CFLAGS) -lncurses $(addprefix src/, $(sources)) -o $(OUT)
+	gdb $(OUT)
 count:
 	cloc src/*
 test: clean | dep obj bin
-	$(CC) -lncurses $(addprefix src/, $(filter-out main.c, $(sources))) src/test.c -o bin/test
+	$(CC) $(CFLAGS) -lncurses $(addprefix src/, $(filter-out main.c, $(sources))) src/test.c -o bin/test
 	./bin/test
 
-ifeq (,$(filter $(MAKECMDGOALS), clean count))
+ifeq (,$(filter $(MAKECMDGOALS), clean count test))
 include $(addprefix dep/, $(sources:.c=.d))
 endif
 

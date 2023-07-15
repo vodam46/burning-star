@@ -10,6 +10,7 @@ CRITICAL:
 windows installation
 https://stackoverflow.com/questions/66063363/how-to-compile-ncurses-program-for-native-windows-use
 graphic? - raylib, sdl
+ - 2 versions - graphic, tui
 
 drawing
 	how to deal with different window sizes
@@ -22,7 +23,7 @@ world data structure
 	tile struct
 		- vehicles? (not needed (dont know if ill ever make vehiclec))
 		- visibility through said tile
-	populate the types files
+	populate the data files
 
 world gen
 
@@ -34,28 +35,28 @@ CURRENT ORDER OF STUFF:
 maze solving - for entities
 	- djikstra's
 	- a*
-enemies
-	- combat system
 
 TODO:
 
-get entity attrs from file
+move more stuff to data files
+	- maybe convert them to a well known format?
 
 tests
 	- map
 
-CONSISTENT NAMING STYLE
+CONSISTENT STYLE
+https://cs50.readthedocs.io/style/c/
+https://www.cs.umd.edu/~nelson/classes/resources/cstyleguide/
+https://github.com/MaJerle/c-code-style
+https://suckless.org/coding_style/
 
 make code readable -> longer variable names ?
 add a license (not needed yet)
 wasd key input? vi key input? numpad diagonal input? (could be done through settings)
 	- settings
-make map struct
 optimize basic_dir
 shorten all lines longer than 80
 refactoring
 initialization macros ?
-better wall drawing
-fix enemy spawning at player position
 steal pathfinding and better maze gen alg from /home/vodam/c-maze-generation
 different (stronger) enemy type

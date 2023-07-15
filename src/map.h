@@ -9,8 +9,8 @@
 // initialize the empty map
 tile** wmap_gen(int rows, int cols);
 
-// create a map with all tiles of type _type
-tile** wmap_gen_tile(int rows, int cols, tile_type _type);
+// create a map with all tiles of type type
+tile** wmap_gen_tile(int rows, int cols, tile_type type);
 
 // create a maze base (walls every other tile)
 tile** wmap_gen_maze_base(int rows, int cols);
