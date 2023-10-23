@@ -1,5 +1,3 @@
-
-// custom libraries
 #include "vector.h"
 
 vector vect_init(int y, int x) {

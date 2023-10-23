@@ -24,13 +24,12 @@ int main() {
 	assert(vect_comp(basic_dir(vect_init(0,0),vect_init(0,1)),vect_init(0,1)))
 
 	// entity
-	assert(ent_comp(
-				ent_init(vect_init(0,0),player,1,1,1),
-				(entity){player,(vector){0,0},1,1,1}));
+	assert(ent_comp(ent_init(vect_init(0,0),player,1,1,1),(entity){player,(vector){0,0},1,1,1}));
 
 	// entity creation
+	tile** wmap;
 	entities_init();
-	tile** wmap = wmap_gen(1,1);
+	wmap = wmap_gen_tile((vector){1,1}, empty);
 	entity** ent_arr = malloc(sizeof(entity));
 	int ent_num = 0;
 	assert(create_entity(wmap,ent_arr,ent_num,vect_init(0,0),player)==1);
@@ -42,6 +41,15 @@ int main() {
 	assert(tile_comp(
 				tile_init(vect_init(0,0),empty,ent_init(vect_init(0,0),player,1,1,1)),
 				(tile){(vector){0,0},empty,(entity){player,(vector){0,0},1,1,1}}));
+
+	// map
+	wmap = wmap_gen_tile((vector){10,10}, wall);
+	int num_not_wall = 0;
+	for (int y = 0; y < 10; y++)
+		for (int x = 0; x < 10; x++)
+			if (wmap[y][x].type != wall)
+				num_not_wall += 1;
+	assert(num_not_wall==0);
 
 	if (tests_failed == 0)
 		printf("✅ ");

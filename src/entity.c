@@ -1,10 +1,7 @@
-
-// global libraries
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// custom libraries
 #include "entity.h"
 #include "vector.h"
 
@@ -61,9 +58,9 @@ entity ent_init(vector pos, entity_type type, int strength, int maxhealth, int h
 }
 
 int ent_comp(entity left, entity right) {
-	return (vect_comp(left.pos,right.pos) && 
-		left.type == right.type && 
-		left.strength == right.strength && 
-		left.maxhealth == right.maxhealth && 
+	return (vect_comp(left.pos,right.pos) &&
+		left.type == right.type &&
+		left.strength == right.strength &&
+		left.maxhealth == right.maxhealth &&
 		left.health == right.health);
 }

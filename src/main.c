@@ -1,4 +1,3 @@
-// global libraries
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,7 +6,6 @@
 #include <unistd.h>
 #include <locale.h>
 
-// custom libraries
 #include "tile.h"
 #include "entity.h"
 #include "map.h"
@@ -30,7 +28,7 @@ int main(void) {
 	keypad(stdscr, TRUE);
 	vector scr_size;
 	getmaxyx(stdscr, scr_size.y, scr_size.x);
-	vector main_scr_size = vect_init(scr_size.y-4,scr_size.x-2);
+	vector wmap_size = vect_init(scr_size.y-4,scr_size.x-2);
 
 	// colors
 	init_pair(0,COLOR_WHITE,COLOR_BLACK);
@@ -39,28 +37,37 @@ int main(void) {
 
 	char* map_options[] = {
 		"Empty map",
-		"Maze"
+		"Maze",
+		"Cave",
 	};
-	int map_choice = menu(stdscr, scr_size, "Test", map_options, sizeof(map_options)/sizeof(*map_options));
+	int map_choice = menu(
+		stdscr,
+		scr_size,
+		"Choose world gen options",
+		map_options,
+		sizeof(map_options)/sizeof(*map_options)
+	);
 	if (map_choice == -1) {
 		endwin();
 		return 1;
 	}
 
-	WINDOW* main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
+	WINDOW* main_scr = newwin(wmap_size.y,wmap_size.x, 3,1);
 
 	tile** wmap;
 	if (map_choice == 0) {
-		wmap = wmap_gen(main_scr_size.y, main_scr_size.x);
+		wmap = wmap_gen_tile(wmap_size, empty);
 	} else if (map_choice == 1) {
-		wmap = wmap_gen_bin_tree_maze(main_scr_size.y, main_scr_size.x);
+		wmap = wmap_gen_bin_tree_maze(wmap_size);
+	} else if (map_choice == 2) {
+		wmap = wmap_gen_directional_cave(wmap_size);
 	} else {
-		wmap = wmap_gen(main_scr_size.y, main_scr_size.x);
+		wmap = wmap_gen_tile(wmap_size, empty);
 	}
-	vector middle = vect_init((int)(main_scr_size.y/2), (int)(main_scr_size.x/2));
+	vector middle = vect_init((int)(wmap_size.y/2), (int)(wmap_size.x/2));
 	char msg[256] = "";
 
-	entity** ent_arr = malloc(main_scr_size.y * main_scr_size.x * sizeof(entity));
+	entity** ent_arr = malloc(wmap_size.y * wmap_size.x * sizeof(entity));
 	int ent_num = 0;
 
 	ent_num = create_entity(wmap, ent_arr, ent_num, vect_init(middle.y+(middle.y%2==0?0:1),middle.x+(middle.x%2==0?0:1)), player);
@@ -79,7 +86,7 @@ int main(void) {
 		else
 			sprintf(ent_num_msg, "%d enemies on screen", ent_num-1);
 		sprintf(msg, "%d/%d hp, %d str, %d killed, %s, %d turns", ent_arr[0]->health, ent_arr[0]->maxhealth, ent_arr[0]->strength, ent_killed, ent_num_msg, turn_count);
-		draw(stdscr, main_scr, wmap, scr_size, main_scr_size, msg);
+		draw(stdscr, main_scr, wmap, scr_size, wmap_size, msg);
 		move(ent_arr[0]->pos.y+3,ent_arr[0]->pos.x+1);
 
 		ch = wgetch(stdscr);					// updates the user input
@@ -120,7 +127,7 @@ int main(void) {
 				// sprintf(msg, "%d, %c", ch, ch);
 				break;
 		}
-		user_moved &= ent_action(wmap, ent_arr, 0, move_dir, main_scr_size);
+		user_moved &= ent_action(wmap, ent_arr, 0, move_dir, wmap_size);
 
 		if (user_moved) {
 			for (int ent_i = 1; ent_i < ent_num; ent_i++) {
@@ -134,7 +141,7 @@ int main(void) {
 					ent_i--;
 					ent_num--;
 				}
-				ent_action(wmap, ent_arr, ent_i, basic_dir(ent_arr[ent_i]->pos, ent_arr[0]->pos), main_scr_size);
+				ent_action(wmap, ent_arr, ent_i, basic_dir(ent_arr[ent_i]->pos, ent_arr[0]->pos), wmap_size);
 			}
 
 			if (ent_arr[0]->health <= 0)
@@ -143,12 +150,12 @@ int main(void) {
 			if (turn_count%10 == 0) {
 				vector new_enemy_pos;
 				if (map_choice) {
-					new_enemy_pos = vect_init((rand()%((int)main_scr_size.y/2))*2,(rand()%((int)main_scr_size.x/2)*2));
+					new_enemy_pos = vect_init((rand()%((int)wmap_size.y/2))*2,(rand()%((int)wmap_size.x/2)*2));
 				} else {
-					new_enemy_pos = vect_init((rand()%main_scr_size.y),(rand()%main_scr_size.x));
+					new_enemy_pos = vect_init((rand()%wmap_size.y),(rand()%wmap_size.x));
 				}
 				if (vect_comp(new_enemy_pos, ent_arr[0]->pos))
-					new_enemy_pos = vect_init(rand()%2*main_scr_size.y,rand()%2*main_scr_size.x);
+					new_enemy_pos = vect_init(rand()%2*wmap_size.y,rand()%2*wmap_size.x);
 				ent_num=create_entity(wmap,ent_arr,ent_num,new_enemy_pos,enemy);
 			}
 
@@ -159,7 +166,6 @@ int main(void) {
 	sprintf(msg,"You died, score: %d, turns played: %d", ent_killed, turn_count);
 	mvprintw((int)scr_size.y/2,(int)scr_size.x/2-(int)strlen(msg)/2,"%s",msg);
 	refresh();
-	// sleep(1);
 	getch();
 
 

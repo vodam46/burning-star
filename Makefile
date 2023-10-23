@@ -4,25 +4,31 @@ CC=cc
 OUT=bin/basic-roguelike
 OUT_DEBUG=bin/basic-roguelike-debug
 CFLAGS=-Wall -Wextra -pedantic -DPROJECT_DIR='"$(shell pwd)"'
+CLIBS= -lncurses -lm
 
 sources=action.c ai.c drawing.c entity.c main.c map.c menu.c tile.c vector.c
 
 .PHONY: default debug clean count run
 
 default: $(OUT)
+
 clean:
 	-rm -Rf obj dep bin
+
 run: $(OUT)
 	./$(OUT)
+
 debug: CFLAGS+=-g
 debug: OUT=$(OUT_DEBUG)
 debug:  | obj dep bin
-	$(CC) $(CFLAGS) -lncurses $(addprefix src/, $(sources)) -o $(OUT)
+	$(CC) $(CFLAGS) $(addprefix src/, $(sources)) -o $(OUT) $(CLIBS)
 	gdb $(OUT)
+
 count:
 	cloc src/*
+
 test: clean | dep obj bin
-	$(CC) $(CFLAGS) -lncurses $(addprefix src/, $(filter-out main.c, $(sources))) src/test.c -o bin/test
+	$(CC) $(CFLAGS) $(addprefix src/, $(filter-out main.c, $(sources))) src/test.c -o bin/test $(CLIBS)
 	./bin/test
 
 ifeq (,$(filter $(MAKECMDGOALS), clean count test))
@@ -39,4 +45,4 @@ obj dep bin:
 	mkdir -p $@
 
 $(OUT): $(addprefix obj/, $(sources:.c=.o)) | bin
-	$(CC) $(CFLAGS) -lncurses -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(CLIBS)

@@ -11,7 +11,7 @@ int ent_action(tile** wmap, entity** ent_arr, int ent_arr_id, vector pos_change,
 	// and if the new tile isnt a wall
 	int user_moved = 0;
 	if (in_bounds(vect_init(new.y, new.x), vect_init(0, 0), scr_size) && !vect_comp(old,new)) {
-		if (wmap[new.y][new.x].ent.type != none) { 
+		if (wmap[new.y][new.x].ent.type != none) {
 			wmap[new.y][new.x].ent.health -= wmap[old.y][old.x].ent.strength;
 			user_moved = 1;
 		}

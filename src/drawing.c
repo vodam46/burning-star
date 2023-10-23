@@ -1,7 +1,5 @@
-// system libraries
 #include <ncurses.h>
 
-// custom libraries
 #include "drawing.h"
 #include "tile.h"
 

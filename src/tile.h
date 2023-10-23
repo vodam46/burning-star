@@ -1,9 +1,6 @@
-
-// header guards
 #ifndef TILE_H
 #define TILE_H
 
-// custom libraries
 #include "entity.h"
 
 // type of tiles

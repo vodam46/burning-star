@@ -1,9 +1,6 @@
-
-// header guards
 #ifndef ENTITY_H
 #define ENTITY_H
 
-// custom libraries
 #include "vector.h"
 
 // entity types

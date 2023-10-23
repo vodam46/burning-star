@@ -14,7 +14,7 @@ graphic? - raylib, sdl
 
 drawing
 	how to deal with different window sizes
-		- generate a larger map, but draw only a portion of it (endless levels)
+		- generate a larger map, but draw only a portion of it (scrolling map)
 
 world data structure
 
@@ -42,7 +42,7 @@ move more stuff to data files
 	- maybe convert them to a well known format?
 
 tests
-	- map
+	- more entity creation
 
 CONSISTENT STYLE
 https://cs50.readthedocs.io/style/c/
@@ -54,9 +54,18 @@ make code readable -> longer variable names ?
 add a license (not needed yet)
 wasd key input? vi key input? numpad diagonal input? (could be done through settings)
 	- settings
-optimize basic_dir
+optimize basic_dir (?)
 shorten all lines longer than 80
 refactoring
 initialization macros ?
 steal pathfinding and better maze gen alg from /home/vodam/c-maze-generation
 different (stronger) enemy type
+rewrite stuff
+scrolling map
+actual dungeons (?)
+or actual worldgen?
+	- perlin noise?
+	- overworld - villages and stuff
+	- dungeons - fixed size
+function to create rectangle, circle, ... in the wmap
+rewrite wmap gen algs
