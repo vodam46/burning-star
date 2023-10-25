@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "map.h"
 #include "vector.h"
+#include "action.h"
 
 void rect_empty(tile** wmap, vector start, vector end, tile_type type) {
 	for (int y = start.y; y < end.y; y++) {
@@ -51,69 +52,79 @@ void circle_filled(tile** wmap, vector center, float radius, tile_type type) {
 // world generation
 // map_size.y is the height
 // map_size.x is the width
-tile** wmap_gen_tile(vector map_size, tile_type type) {
+world_map wmap_gen_tile(vector map_size, tile_type type) {
 
-	tile** wmap = malloc(map_size.y * sizeof(tile));	// allocate the 2d array
+	world_map wmap;
+	wmap.map = malloc(map_size.y * sizeof(tile));	// allocate the 2d array
+	wmap.size = map_size;
 
 	for (int y=0; y<map_size.y; y++) {
-		wmap[y] = malloc(map_size.x * sizeof(tile));	// allocate each array of the 2d array
+		wmap.map[y] = malloc(map_size.x * sizeof(tile));	// allocate each array of the 2d array
 		for (int x=0; x<map_size.x; x++) {
 			// set the variables for each tile
-			wmap[y][x] = tile_init(
+			wmap.map[y][x] = tile_init(
 				vect_init(y, x),
 				type,
 				ent_init(vect_init(y,x), none, 0, 0, 0)
 			);
 		}
 	}
+	wmap.ent_arr = malloc(wmap.size.y * wmap.size.x * sizeof(entity));
+	vector middle = vect_init((int)(wmap.size.y/2), (int)(wmap.size.x/2));
+	vector player_pos = vect_init(middle.y+(middle.y%2==0?0:1),middle.x+(middle.x%2==0?0:1));
+	wmap.map[player_pos.y][player_pos.x].ent = ent_data[player].ent;
+	wmap.map[player_pos.y][player_pos.x].ent.pos = player_pos;
+	wmap.ent_arr[0] = &wmap.map[player_pos.y][player_pos.x].ent;
+	wmap.ent_num = 1;
+
 	return wmap;
 }
 
-tile** wmap_gen_maze_base(vector map_size) {
+world_map wmap_gen_maze_base(vector map_size) {
 
-	tile** wmap = wmap_gen_tile(map_size, wall);
+	world_map wmap = wmap_gen_tile(map_size, wall);
 
 	for (int y=0; y<(int)(map_size.y+1)/2; y++) {
 		for (int x=0; x<(int)(map_size.x+1)/2; x++) {
-			wmap[y*2][x*2].type = empty;
+			wmap.map[y*2][x*2].type = empty;
 		}
 	}
 	return wmap;
 }
 
-tile** wmap_gen_bin_tree_maze(vector map_size) {
+world_map wmap_gen_bin_tree_maze(vector map_size) {
 
-	tile** wmap = wmap_gen_maze_base(map_size);
+	world_map wmap = wmap_gen_maze_base(map_size);
 
 	for (int y=0; y<(int)(map_size.y+1)/2; y++) {
 		for (int x=0; x<(int)(map_size.x+1)/2; x++) {
 			if (y > 0 && x > 0) {
 				if (rand() % 2) {
-					wmap[y*2-1][x*2].type = empty;
+					wmap.map[y*2-1][x*2].type = empty;
 				}
 				else {
-					wmap[y*2][x*2-1].type = empty;
+					wmap.map[y*2][x*2-1].type = empty;
 				}
 			} else if (y > 0) {
-				wmap[y*2-1][x*2].type = empty;
+				wmap.map[y*2-1][x*2].type = empty;
 			} else if (x > 0) {
-				wmap[y*2][x*2-1].type = empty;
+				wmap.map[y*2][x*2-1].type = empty;
 			}
 		}
 	}
 	return wmap;
 }
 
-tile** wmap_gen_directional_cave(vector map_size) {
+world_map wmap_gen_directional_cave(vector map_size) {
 	int length = map_size.y - 4;
 	int roughness = 100;
 	int windyness = 60;
 	int start_width = 10;
 	vector start = vect_init(1, (int)map_size.x / 2);
-	tile** wmap = wmap_gen_tile(map_size, wall);
+	world_map wmap = wmap_gen_tile(map_size, wall);
 
 	int y = start.y, x = start.x, width = start_width;
-	rect_filled(wmap, vect_init(y, x-(int)width/2), vect_init(y, x+(int)width/2), empty);
+	rect_filled(wmap.map, vect_init(y, x-(int)width/2), vect_init(y, x+(int)width/2), empty);
 
 	while (y - start.y <= length) {
 		y++;
@@ -131,7 +142,16 @@ tile** wmap_gen_directional_cave(vector map_size) {
 			else if (x > map_size.x-3)
 				x = map_size.x-3;
 		}
-		rect_filled(wmap, vect_init(y, x-(int)width/2), vect_init(y, x+(int)width/2), empty);
+		rect_filled(wmap.map, vect_init(y, x-(int)width/2), vect_init(y, x+(int)width/2), empty);
+		if (y - start.y == (int)length/2) {
+			vector middle = vect_init((int)(wmap.size.y/2), (int)(wmap.size.x/2));
+			vector player_pos = vect_init(middle.y+(middle.y%2==0?0:1),middle.x+(middle.x%2==0?0:1));
+			entity player = wmap.map[player_pos.y][player_pos.x].ent;
+			wmap.map[player_pos.y][player_pos.x].ent = ent_data[none].ent;
+			player.pos = vect_init(y, x);
+			wmap.map[player.pos.y][player.pos.x].ent = player;
+			wmap.ent_arr[0] = &wmap.map[player.pos.y][player.pos.x].ent;
+		}
 	}
 
 

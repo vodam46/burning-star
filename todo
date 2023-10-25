@@ -4,6 +4,7 @@ magic x computers - fusion?
 levels in the style of cdda (skills)
 
 http://roguebasin.com/index.php/How_to_Write_a_Roguelike_in_15_Steps
+https://github.com/marukrap/RoguelikeDevResources
 
 CRITICAL:
 
@@ -14,11 +15,11 @@ graphic? - raylib, sdl
 
 drawing
 	how to deal with different window sizes
-		- generate a larger map, but draw only a portion of it (scrolling map)
+		- now only need to resize the screen areas
 
 world data structure
 
-	make it infinite (load chunks from a save file)
+	make it infinite (load chunks from a save file) ?
 
 	tile struct
 		- vehicles? (not needed (dont know if ill ever make vehiclec))
@@ -43,6 +44,7 @@ move more stuff to data files
 
 tests
 	- more entity creation
+	- more world map gen
 
 CONSISTENT STYLE
 https://cs50.readthedocs.io/style/c/
@@ -51,21 +53,20 @@ https://github.com/MaJerle/c-code-style
 https://suckless.org/coding_style/
 
 make code readable -> longer variable names ?
-add a license (not needed yet)
+add a license (not needed yet?)
 wasd key input? vi key input? numpad diagonal input? (could be done through settings)
 	- settings
-optimize basic_dir (?)
+optimize basic_dir
+	- fix, enemies travel untill diagonal to the player (maybe just illusion from scrolling map)
 shorten all lines longer than 80
-refactoring
+refactoring ?
 initialization macros ?
 steal pathfinding and better maze gen alg from /home/vodam/c-maze-generation
 different (stronger) enemy type
 rewrite stuff
-scrolling map
 actual dungeons (?)
 or actual worldgen?
 	- perlin noise?
 	- overworld - villages and stuff
 	- dungeons - fixed size
-function to create rectangle, circle, ... in the wmap
 rewrite wmap gen algs

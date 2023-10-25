@@ -28,7 +28,7 @@ int main(void) {
 	keypad(stdscr, TRUE);
 	vector scr_size;
 	getmaxyx(stdscr, scr_size.y, scr_size.x);
-	vector wmap_size = vect_init(scr_size.y-4,scr_size.x-2);
+	vector main_scr_size = vect_init(scr_size.y-4, scr_size.x-2);
 
 	// colors
 	init_pair(0,COLOR_WHITE,COLOR_BLACK);
@@ -52,26 +52,21 @@ int main(void) {
 		return 1;
 	}
 
-	WINDOW* main_scr = newwin(wmap_size.y,wmap_size.x, 3,1);
+	WINDOW* main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
 
-	tile** wmap;
+	world_map wmap;
+	wmap.size = vect_init(1000,1000);
 	if (map_choice == 0) {
-		wmap = wmap_gen_tile(wmap_size, empty);
+		wmap = wmap_gen_tile(wmap.size, empty);
 	} else if (map_choice == 1) {
-		wmap = wmap_gen_bin_tree_maze(wmap_size);
+		wmap = wmap_gen_bin_tree_maze(wmap.size);
 	} else if (map_choice == 2) {
-		wmap = wmap_gen_directional_cave(wmap_size);
+		wmap = wmap_gen_directional_cave(wmap.size);
 	} else {
-		wmap = wmap_gen_tile(wmap_size, empty);
+		wmap = wmap_gen_tile(wmap.size, empty);
 	}
-	vector middle = vect_init((int)(wmap_size.y/2), (int)(wmap_size.x/2));
+
 	char msg[256] = "";
-
-	entity** ent_arr = malloc(wmap_size.y * wmap_size.x * sizeof(entity));
-	int ent_num = 0;
-
-	ent_num = create_entity(wmap, ent_arr, ent_num, vect_init(middle.y+(middle.y%2==0?0:1),middle.x+(middle.x%2==0?0:1)), player);
-
 	int turn_count = 0;
 	int ent_killed = 0;
 	char ent_num_msg[100] = "";
@@ -79,15 +74,15 @@ int main(void) {
 	int ch = 0;
 	// main game loop
 	while (ch != 'q') {
-		if (ent_num-1 == 0)
+		if (wmap.ent_num-1 == 0)
 			sprintf(ent_num_msg, "no enemy on screen");
-		else if (ent_num-1 == 1)
+		else if (wmap.ent_num-1 == 1)
 			sprintf(ent_num_msg, "1 enemy on screen");
 		else
-			sprintf(ent_num_msg, "%d enemies on screen", ent_num-1);
-		sprintf(msg, "%d/%d hp, %d str, %d killed, %s, %d turns", ent_arr[0]->health, ent_arr[0]->maxhealth, ent_arr[0]->strength, ent_killed, ent_num_msg, turn_count);
-		draw(stdscr, main_scr, wmap, scr_size, wmap_size, msg);
-		move(ent_arr[0]->pos.y+3,ent_arr[0]->pos.x+1);
+			sprintf(ent_num_msg, "%d enemies on screen", wmap.ent_num-1);
+		sprintf(msg, "%d/%d hp, %d str, %d killed, %s, %d turns", wmap.ent_arr[0]->health, wmap.ent_arr[0]->maxhealth, wmap.ent_arr[0]->strength, ent_killed, ent_num_msg, turn_count);
+		draw(stdscr, main_scr, wmap, scr_size, main_scr_size, msg);
+		move(wmap.ent_arr[0]->pos.y+3,wmap.ent_arr[0]->pos.x+1);
 
 		ch = wgetch(stdscr);					// updates the user input
 		vector move_dir = vect_init(0,0);
@@ -127,36 +122,36 @@ int main(void) {
 				// sprintf(msg, "%d, %c", ch, ch);
 				break;
 		}
-		user_moved &= ent_action(wmap, ent_arr, 0, move_dir, wmap_size);
+		user_moved &= ent_action(wmap, 0, move_dir, wmap.size);
 
 		if (user_moved) {
-			for (int ent_i = 1; ent_i < ent_num; ent_i++) {
-				if (ent_arr[ent_i]->health <= 0) {
+			for (int ent_i = 1; ent_i < wmap.ent_num; ent_i++) {
+				if (wmap.ent_arr[ent_i]->health <= 0) {
 					// delete
 					ent_killed++;
-					ent_arr[ent_i]->type = none;
-					for (int i = ent_i; i < ent_num-1; i++) {
-						ent_arr[i] = ent_arr[i+1];
+					wmap.ent_arr[ent_i]->type = none;
+					for (int i = ent_i; i < wmap.ent_num-1; i++) {
+						wmap.ent_arr[i] = wmap.ent_arr[i+1];
 					}
 					ent_i--;
-					ent_num--;
+					wmap.ent_num--;
 				}
-				ent_action(wmap, ent_arr, ent_i, basic_dir(ent_arr[ent_i]->pos, ent_arr[0]->pos), wmap_size);
+				ent_action(wmap, ent_i, basic_dir(wmap.ent_arr[ent_i]->pos, wmap.ent_arr[0]->pos), wmap.size);
 			}
 
-			if (ent_arr[0]->health <= 0)
+			if (wmap.ent_arr[0]->health <= 0)
 				break;
 
 			if (turn_count%10 == 0) {
 				vector new_enemy_pos;
 				if (map_choice) {
-					new_enemy_pos = vect_init((rand()%((int)wmap_size.y/2))*2,(rand()%((int)wmap_size.x/2)*2));
+					new_enemy_pos = vect_init((rand()%((int)wmap.size.y/2))*2,(rand()%((int)wmap.size.x/2)*2));
 				} else {
-					new_enemy_pos = vect_init((rand()%wmap_size.y),(rand()%wmap_size.x));
+					new_enemy_pos = vect_init((rand()%wmap.size.y),(rand()%wmap.size.x));
 				}
-				if (vect_comp(new_enemy_pos, ent_arr[0]->pos))
-					new_enemy_pos = vect_init(rand()%2*wmap_size.y,rand()%2*wmap_size.x);
-				ent_num=create_entity(wmap,ent_arr,ent_num,new_enemy_pos,enemy);
+				if (vect_comp(new_enemy_pos, wmap.ent_arr[0]->pos))
+					new_enemy_pos = vect_init(rand()%2*wmap.size.y,rand()%2*wmap.size.x);
+				wmap.ent_num=create_entity(wmap,new_enemy_pos,enemy);
 			}
 
 			turn_count++;
@@ -171,9 +166,9 @@ int main(void) {
 
 	endwin();		// end ncurses mode
 	for (int y = 0; y < scr_size.y; y++)
-		free(wmap[y]);
-	free(wmap);		// free the memory for the world map
-	free(ent_arr);	// free the memory for the entity array
+		free(wmap.map[y]);
+	free(wmap.map);		// free the memory for the world map
+	free(wmap.ent_arr);	// free the memory for the entity array
 	printf("%d enemies killed\n", ent_killed);
 	return 0;
 }

@@ -1,8 +1,9 @@
 
 CC=cc
 # CC=clang
-OUT=bin/basic-roguelike
-OUT_DEBUG=bin/basic-roguelike-debug
+NAME = basic-roguelike
+OUT=bin/$(NAME)
+OUT_DEBUG=bin/$(NAME)-debug
 CFLAGS=-Wall -Wextra -pedantic -DPROJECT_DIR='"$(shell pwd)"'
 CLIBS= -lncurses -lm
 

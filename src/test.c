@@ -27,13 +27,11 @@ int main() {
 	assert(ent_comp(ent_init(vect_init(0,0),player,1,1,1),(entity){player,(vector){0,0},1,1,1}));
 
 	// entity creation
-	tile** wmap;
+	world_map wmap;
 	entities_init();
 	wmap = wmap_gen_tile((vector){1,1}, empty);
-	entity** ent_arr = malloc(sizeof(entity));
-	int ent_num = 0;
-	assert(create_entity(wmap,ent_arr,ent_num,vect_init(0,0),player)==1);
-	assert(ent_comp(wmap[0][0].ent,ent_init(vect_init(0,0),player,5,20,20)));
+	assert(wmap.ent_num==1);
+	assert(ent_comp(wmap.map[0][0].ent,ent_init(vect_init(0,0),player,5,20,20)));
 
 	// tile
 	tiles_init();
@@ -47,7 +45,7 @@ int main() {
 	int num_not_wall = 0;
 	for (int y = 0; y < 10; y++)
 		for (int x = 0; x < 10; x++)
-			if (wmap[y][x].type != wall)
+			if (wmap.map[y][x].type != wall)
 				num_not_wall += 1;
 	assert(num_not_wall==0);
 
