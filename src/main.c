@@ -11,9 +11,9 @@
 #include "map.h"
 #include "drawing.h"
 #include "vector.h"
-#include "ai.h"
 #include "menu.h"
 #include "action.h"
+#include "ai.h"
 
 int main(void) {
 	srand(time(NULL));
@@ -55,7 +55,7 @@ int main(void) {
 	WINDOW* main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
 
 	world_map wmap;
-	wmap.size = vect_init(1000,1000);
+	wmap.size = vect_init(1000, 1000);
 	if (map_choice == 0) {
 		wmap = wmap_gen_tile(wmap.size, empty);
 	} else if (map_choice == 1) {
@@ -80,10 +80,21 @@ int main(void) {
 			sprintf(ent_num_msg, "1 enemy on screen");
 		else
 			sprintf(ent_num_msg, "%d enemies on screen", wmap.ent_num-1);
-		sprintf(msg, "%d/%d hp, %d str, %d killed, %s, %d turns", wmap.ent_arr[0]->health, wmap.ent_arr[0]->maxhealth, wmap.ent_arr[0]->strength, ent_killed, ent_num_msg, turn_count);
+		sprintf(
+			msg,
+			"%d/%d hp, %d str, %d killed, %s, %d turns, y: %d x: %d",
+			wmap.ent_arr[0]->health,
+			wmap.ent_arr[0]->maxhealth,
+			wmap.ent_arr[0]->strength,
+			ent_killed,
+			ent_num_msg,
+			turn_count,
+			wmap.ent_arr[0]->pos.y,
+			wmap.ent_arr[0]->pos.x
+		);
 		draw(stdscr, main_scr, wmap, scr_size, main_scr_size, msg);
-		move(wmap.ent_arr[0]->pos.y+3,wmap.ent_arr[0]->pos.x+1);
 
+		flushinp();
 		ch = wgetch(stdscr);					// updates the user input
 		vector move_dir = vect_init(0,0);
 		int user_moved = 1;
@@ -125,6 +136,7 @@ int main(void) {
 		user_moved &= ent_action(wmap, 0, move_dir, wmap.size);
 
 		if (user_moved) {
+			update_dijstrka_map(wmap);
 			for (int ent_i = 1; ent_i < wmap.ent_num; ent_i++) {
 				if (wmap.ent_arr[ent_i]->health <= 0) {
 					// delete
@@ -136,7 +148,13 @@ int main(void) {
 					ent_i--;
 					wmap.ent_num--;
 				}
-				ent_action(wmap, ent_i, basic_dir(wmap.ent_arr[ent_i]->pos, wmap.ent_arr[0]->pos), wmap.size);
+				vector ent_dir = vect_init(0, 0);
+				if (dijkstra_map[wmap.ent_arr[ent_i]->pos.y][wmap.ent_arr[ent_i]->pos.x].visited) {
+					ent_dir = dijkstra_map[wmap.ent_arr[ent_i]->pos.y][wmap.ent_arr[ent_i]->pos.x].dir;
+				} else {
+					ent_dir = basic_dir(wmap.ent_arr[ent_i]->pos, wmap.ent_arr[0]->pos);
+				}
+				ent_action(wmap, ent_i, ent_dir, wmap.size);
 			}
 
 			if (wmap.ent_arr[0]->health <= 0)

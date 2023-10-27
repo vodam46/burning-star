@@ -32,19 +32,14 @@ movement
 	have i missed something?
 		https://github.com/CleverRaven/Cataclysm-DDA/blob/master/src/avatar_action.cpp#L152-L520
 
-CURRENT ORDER OF STUFF:
-maze solving - for entities
-	- djikstra's
-	- a*
-
 TODO:
-
 move more stuff to data files
 	- maybe convert them to a well known format?
 
 tests
 	- more entity creation
 	- more world map gen
+	- dijkstra maps
 
 CONSISTENT STYLE
 https://cs50.readthedocs.io/style/c/
@@ -61,7 +56,6 @@ optimize basic_dir
 shorten all lines longer than 80
 refactoring ?
 initialization macros ?
-steal pathfinding and better maze gen alg from /home/vodam/c-maze-generation
 different (stronger) enemy type
 rewrite stuff
 actual dungeons (?)
@@ -70,3 +64,6 @@ or actual worldgen?
 	- overworld - villages and stuff
 	- dungeons - fixed size
 rewrite wmap gen algs
+make the drawing and input functions bindings independent of ncurses
+	- ui.h ui.c ?
+allocate the dijkstra_map array only once
