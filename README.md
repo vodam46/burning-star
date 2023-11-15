@@ -34,5 +34,12 @@ make test
 ```
 
 ### Windows
-*coming soon, sorry*
+- install [MSYS2](https://www.msys2.org/)
+- open the MSYS2 commandline
+- install gcc, make, ncurses
+    `pacman -S gcc make ncurses-devel`
+- navigate to the directory where you downloaded this project
+    `cd DIRECTORY`
 
+to compile and run the game, make sure youre in the MSYS2 terminal, then follow
+the linux instructions

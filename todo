@@ -1,15 +1,13 @@
 GENERAL INFO
 roguelike
 magic x computers - fusion?
-levels in the style of cdda (skills)
+levels in the style of cdda (skills) ?
 
 http://roguebasin.com/index.php/How_to_Write_a_Roguelike_in_15_Steps
 https://github.com/marukrap/RoguelikeDevResources
 
 CRITICAL:
 
-windows installation
-https://stackoverflow.com/questions/66063363/how-to-compile-ncurses-program-for-native-windows-use
 graphic? - raylib, sdl
  - 2 versions - graphic, tui
 
@@ -66,4 +64,7 @@ or actual worldgen?
 rewrite wmap gen algs
 make the drawing and input functions bindings independent of ncurses
 	- ui.h ui.c ?
-allocate the dijkstra_map array only once
+items
+	- health potion, dropped by enemies
+move data files into different directory (~/.local, AppData)
+generalize the drawing functions -> preparations for graphics

@@ -1,4 +1,11 @@
+#if defined(__CYGWIN__)
+#include <ncurses/ncurses.h>
+#elif defined(unix)
 #include <ncurses.h>
+#else
+#error "Unknown platform"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -75,11 +82,11 @@ int main(void) {
 	// main game loop
 	while (ch != 'q') {
 		if (wmap.ent_num-1 == 0)
-			sprintf(ent_num_msg, "no enemy on screen");
+			sprintf(ent_num_msg, "no enemy alive");
 		else if (wmap.ent_num-1 == 1)
-			sprintf(ent_num_msg, "1 enemy on screen");
+			sprintf(ent_num_msg, "1 enemy alive");
 		else
-			sprintf(ent_num_msg, "%d enemies on screen", wmap.ent_num-1);
+			sprintf(ent_num_msg, "%d enemies alive", wmap.ent_num-1);
 		sprintf(
 			msg,
 			"%d/%d hp, %d str, %d killed, %s, %d turns, y: %d x: %d",

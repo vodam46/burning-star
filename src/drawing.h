@@ -1,7 +1,13 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
+#if defined(__CYGWIN__)
+#include <ncurses/ncurses.h>
+#elif defined(unix)
 #include <ncurses.h>
+#else
+#error "Unknown platform"
+#endif
 
 #include "map.h"
 #include "tile.h"
