@@ -48,7 +48,10 @@ void update_dijstrka_map(world_map wmap) {
 			};
 		}
 	}
-	vector current_node = vect_init(wmap.ent_arr[0]->pos.y, wmap.ent_arr[0]->pos.x);
+	vector current_node = vect_init(
+		wmap.ent_arr[0]->pos.y,
+		wmap.ent_arr[0]->pos.x
+	);
 	dijkstra_map[current_node.y][current_node.x].dist = 0;
 	int finished = 0;
 	vector neighbor;
@@ -63,24 +66,36 @@ void update_dijstrka_map(world_map wmap) {
 			int smallest_dist = INT_MAX;
 
 			neighbor = vect_init(current_node.y + offset, current_node.x);
-			if (in_bounds(neighbor, vect_init(0, 0), wmap.size) && wmap.map[neighbor.y][neighbor.x].type != wall) {
+			if (
+				in_bounds(neighbor, vect_init(0, 0), wmap.size)
+				&& wmap.map[neighbor.y][neighbor.x].type != wall
+			) {
 				int new_dist = dijkstra_map[current_node.y][current_node.x].dist + 10;
 				if (dijkstra_map[neighbor.y][neighbor.x].dist > new_dist) {
 					dijkstra_map[neighbor.y][neighbor.x].dist = new_dist;
 				} else if (dijkstra_map[neighbor.y][neighbor.x].dist < smallest_dist) {
 					smallest_dist = dijkstra_map[neighbor.y][neighbor.x].dist;
-					dijkstra_map[current_node.y][current_node.x].dir = vect_sub(neighbor, current_node);
+					dijkstra_map[current_node.y][current_node.x].dir = vect_sub(
+						neighbor,
+						current_node
+					);
 				}
 			}
 
 			neighbor = vect_init(current_node.y, current_node.x + offset);
-			if (in_bounds(neighbor, vect_init(0, 0), wmap.size) && wmap.map[neighbor.y][neighbor.x].type != wall) {
+			if (
+				in_bounds(neighbor, vect_init(0, 0), wmap.size)
+				&& wmap.map[neighbor.y][neighbor.x].type != wall
+			) {
 				int new_dist = dijkstra_map[current_node.y][current_node.x].dist + 10;
 				if (dijkstra_map[neighbor.y][neighbor.x].dist > new_dist) {
 					dijkstra_map[neighbor.y][neighbor.x].dist = new_dist;
 				} else if (dijkstra_map[neighbor.y][neighbor.x].dist < smallest_dist) {
 					smallest_dist = dijkstra_map[neighbor.y][neighbor.x].dist;
-					dijkstra_map[current_node.y][current_node.x].dir = vect_sub(neighbor, current_node);
+					dijkstra_map[current_node.y][current_node.x].dir = vect_sub(
+						neighbor,
+						current_node
+					);
 				}
 			}
 

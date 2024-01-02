@@ -20,7 +20,7 @@ world data structure
 	make it infinite (load chunks from a save file) ?
 
 	tile struct
-		- vehicles? (not needed (dont know if ill ever make vehiclec))
+		- vehicles? (not needed (dont know if ill ever make vehicles))
 		- visibility through said tile
 	populate the data files
 
@@ -33,6 +33,7 @@ movement
 TODO:
 move more stuff to data files
 	- maybe convert them to a well known format?
+		- INI (TOML?), json, yaml?
 
 tests
 	- more entity creation
@@ -49,8 +50,6 @@ make code readable -> longer variable names ?
 add a license (not needed yet?)
 wasd key input? vi key input? numpad diagonal input? (could be done through settings)
 	- settings
-optimize basic_dir
-	- fix, enemies travel untill diagonal to the player (maybe just illusion from scrolling map)
 shorten all lines longer than 80
 refactoring ?
 initialization macros ?
@@ -58,13 +57,12 @@ different (stronger) enemy type
 rewrite stuff
 actual dungeons (?)
 or actual worldgen?
-	- perlin noise?
 	- overworld - villages and stuff
 	- dungeons - fixed size
 rewrite wmap gen algs
 make the drawing and input functions bindings independent of ncurses
 	- ui.h ui.c ?
-items
-	- health potion, dropped by enemies
 move data files into different directory (~/.local, AppData)
 generalize the drawing functions -> preparations for graphics
+rewrite and refactor
+opensimplex noise

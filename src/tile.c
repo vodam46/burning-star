@@ -12,12 +12,11 @@ const char* tile_name[] = {
 };
 
 til_data tile_data[last_tile] = {0};
-void tiles_init() {
-	char data_dir[100];
-	strcpy(data_dir, PROJECT_DIR);
+void tiles_init(void) {
+	char data_dir[100] = PROJECT_DIR;
 	strcat(data_dir,"/data/tile/");
-	for (int i = 1; i < last_tile; i++) {
-		char file_name[100];
+	for (int i = 0; i < last_tile; i++) {
+		char file_name[100] = {0};
 		strcpy(file_name, data_dir);
 		strcat(file_name, tile_name[i]);
 
@@ -39,11 +38,12 @@ void tiles_init() {
 	}
 }
 
-tile tile_init(vector pos, tile_type type, entity ent) {
+tile tile_init(vector pos, tile_type type, entity ent, inventory items) {
 	tile ret_tile;
 	ret_tile.pos = pos;
 	ret_tile.type = type;
 	ret_tile.ent = ent;
+	ret_tile.items = items;
 	return ret_tile;
 }
 

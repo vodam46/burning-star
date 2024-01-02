@@ -1,7 +1,7 @@
-# Basic Roguelike made by vodam46
+# Burning Star
 
-Just a basic game I'm trying to make for absolutely no reason other than
-"just because" (and to also learn C).
+For now just a basic game I'm trying to make for absolutely no reason other
+than "just because" (and to also learn C).
 
 For future (hopefully) features see [todo](todo) file
 
@@ -9,7 +9,7 @@ For future (hopefully) features see [todo](todo) file
 ### Linux
 #### download the source code
 ```sh
-git clone https://github.com/vodam46/basic-roguelike.git
+git clone https://github.com/vodam46/burning-star.git
 ```
 #### compilation
 ```sh
@@ -21,7 +21,7 @@ make run
 ```
 or (after compilation)
 ```sh
-./bin/basic-roguelike
+./bin/burning-star
 ```
 #### Debug version
 Runs the entire program inside gdb

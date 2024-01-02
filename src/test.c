@@ -8,7 +8,10 @@
 #include "map.h"
 #include "action.h"
 
-#define assert(test) tests_run++; if(!(test)) { tests_failed++; printf("\033[0;31mX\033[0m %s:%d %s\n",__FILE__,__LINE__,#test); };
+#define assert(test) tests_run++; if(!(test)) {\
+	tests_failed++;\
+	printf("\033[0;31mX\033[0m %s:%d %s\n",__FILE__,__LINE__,#test);\
+};
 
 int main() {
 	int tests_run = 0;
@@ -37,7 +40,7 @@ int main() {
 	tiles_init();
 	assert(tile_data[1].tile.type == wall);
 	assert(tile_comp(
-				tile_init(vect_init(0,0),empty,ent_init(vect_init(0,0),player,1,1,1)),
+				tile_init(vect_init(0,0),empty,ent_init(vect_init(0,0),player,1,1,1), (item){0}),
 				(tile){(vector){0,0},empty,(entity){player,(vector){0,0},1,1,1}}));
 
 	// map

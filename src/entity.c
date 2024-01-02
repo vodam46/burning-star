@@ -11,12 +11,11 @@ const char* ent_name[] = {
 	"enemy",
 };
 entity_data ent_data[3] = {0};
-void entities_init() {
-	char data_dir[100];
-	strcpy(data_dir, PROJECT_DIR);
+void entities_init(void) {
+	char data_dir[100] = PROJECT_DIR;
 	strcat(data_dir,"/data/entity/");
-	for (int i = 1; i < last_ent; i++) {
-		char file_name[100];
+	for (int i = 0; i < last_ent; i++) {
+		char file_name[100] = {0};
 		strcpy(file_name, data_dir);
 		strcat(file_name, ent_name[i]);
 
@@ -39,21 +38,34 @@ void entities_init() {
 		getline(&line, &len, file); // strength
 		ent_data[i].ent.strength = atoi(line);
 
-		// getline(&line, &len, file); // color
-		// ent_data[i].entity_color = atoi(line);
+		getline(&line, &len, file); // color
+		ent_data[i].entity_color = atoi(line);
+
+		ent_data[i].ent.inventory = (inventory){0};
 
 		fclose(file);
 	}
 }
 
 // entity init function
-entity ent_init(vector pos, entity_type type, int strength, int maxhealth, int health) {
+entity ent_init(
+	vector pos,
+	entity_type type,
+	int strength,
+	int maxhealth,
+	int health,
+	inventory inventory
+) {
 	entity ret_ent;
 	ret_ent.pos = pos;
 	ret_ent.type = type;
 	ret_ent.strength = strength;
 	ret_ent.maxhealth = maxhealth;
 	ret_ent.health = health;
+
+	// fix this probably?
+	ret_ent.inventory = inventory;
+
 	return ret_ent;
 }
 

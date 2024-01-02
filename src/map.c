@@ -55,23 +55,26 @@ void circle_filled(tile** wmap, vector center, float radius, tile_type type) {
 world_map wmap_gen_tile(vector map_size, tile_type type) {
 
 	world_map wmap;
-	wmap.map = malloc(map_size.y * sizeof(tile));	// allocate the 2d array
+	wmap.map = malloc(map_size.y * sizeof(tile));
 	wmap.size = map_size;
 
 	for (int y=0; y<map_size.y; y++) {
-		wmap.map[y] = malloc(map_size.x * sizeof(tile));	// allocate each array of the 2d array
+		wmap.map[y] = malloc(map_size.x * sizeof(tile));
 		for (int x=0; x<map_size.x; x++) {
-			// set the variables for each tile
 			wmap.map[y][x] = tile_init(
 				vect_init(y, x),
 				type,
-				ent_init(vect_init(y,x), none, 0, 0, 0)
+				ent_init(vect_init(y,x), none_entity, 0, 0, 0, (inventory){0, 0}),
+				(inventory){0}
 			);
 		}
 	}
 	wmap.ent_arr = malloc(wmap.size.y * wmap.size.x * sizeof(entity));
 	vector middle = vect_init((int)(wmap.size.y/2), (int)(wmap.size.x/2));
-	vector player_pos = vect_init(middle.y+(middle.y%2==0?0:1),middle.x+(middle.x%2==0?0:1));
+	vector player_pos = vect_init(
+		middle.y+(middle.y%2==0?0:1),
+		middle.x+(middle.x%2==0?0:1)
+	);
 	wmap.map[player_pos.y][player_pos.x].ent = ent_data[player].ent;
 	wmap.map[player_pos.y][player_pos.x].ent.pos = player_pos;
 	wmap.ent_arr[0] = &wmap.map[player_pos.y][player_pos.x].ent;
@@ -124,7 +127,12 @@ world_map wmap_gen_directional_cave(vector map_size) {
 	world_map wmap = wmap_gen_tile(map_size, wall);
 
 	int y = start.y, x = start.x, width = start_width;
-	rect_filled(wmap.map, vect_init(y, x-(int)width/2), vect_init(y, x+(int)width/2), empty);
+	rect_filled(
+		wmap.map,
+		vect_init(y, x-(int)width/2),
+		vect_init(y, x+(int)width/2),
+		empty
+	);
 
 	while (y - start.y <= length) {
 		y++;
@@ -142,12 +150,20 @@ world_map wmap_gen_directional_cave(vector map_size) {
 			else if (x > map_size.x-3)
 				x = map_size.x-3;
 		}
-		rect_filled(wmap.map, vect_init(y, x-(int)width/2), vect_init(y, x+(int)width/2), empty);
+		rect_filled(
+			wmap.map,
+			vect_init(y, x-(int)width/2),
+			vect_init(y, x+(int)width/2),
+			empty
+		);
 		if (y - start.y == (int)length/2) {
 			vector middle = vect_init((int)(wmap.size.y/2), (int)(wmap.size.x/2));
-			vector player_pos = vect_init(middle.y+(middle.y%2==0?0:1),middle.x+(middle.x%2==0?0:1));
+			vector player_pos = vect_init(
+				middle.y+(middle.y%2==0?0:1),
+				middle.x+(middle.x%2==0?0:1)
+			);
 			entity player = wmap.map[player_pos.y][player_pos.x].ent;
-			wmap.map[player_pos.y][player_pos.x].ent = ent_data[none].ent;
+			wmap.map[player_pos.y][player_pos.x].ent = ent_data[none_entity].ent;
 			player.pos = vect_init(y, x);
 			wmap.map[player.pos.y][player.pos.x].ent = player;
 			wmap.ent_arr[0] = &wmap.map[player.pos.y][player.pos.x].ent;
@@ -157,3 +173,5 @@ world_map wmap_gen_directional_cave(vector map_size) {
 
 	return wmap;
 }
+
+#define world_gen(map_size) wmap_gen_directional_cave

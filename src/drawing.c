@@ -14,7 +14,7 @@ int scrolling_map(int player_pos, int half_screen, int map_width) {
 	if (player_pos < half_screen) {
 		return 0;
 	} else if (player_pos  >= map_width - half_screen) {
-		return map_width - half_screen;
+		return map_width - half_screen*2;
 	} else {
 		return player_pos - half_screen;
 	}
@@ -31,29 +31,51 @@ void draw_main_scr(WINDOW* main_scr, world_map wmap, vector scr_size) {
 	);
 	for (int y = camera.y; y < scr_size.y+camera.y; y++) {
 		for (int x = camera.x; x < scr_size.x+camera.x; x++) {
-			// if entity - use entity char, else use tile char
+			if (y < wmap.size.y && x < wmap.size.x) {
+				// if entity - use entity char, else use tile char
 
-			wmove(main_scr,y-camera.y,x-camera.x);
-			if (
-					in_bounds(vect_init(y, x), vect_init(0, 0), wmap.size) &&
-					wmap.map[y][x].ent.type != none
-					) {
+				wmove(main_scr,y-camera.y,x-camera.x);
+				if (wmap.map[y][x].ent.type != none_entity) {
+					wattron(
+						main_scr,
+						COLOR_PAIR(ent_data[wmap.map[y][x].ent.type].entity_color)
+					);
+					waddstr(main_scr, ent_data[wmap.map[y][x].ent.type].entity_char);
+					wattroff(
+						main_scr,
+						COLOR_PAIR(ent_data[wmap.map[y][x].ent.type].entity_color)
+					);
+				} else if (wmap.map[y][x].items.num_items > 0) {
+					wattron(
+						main_scr,
+						COLOR_PAIR(item_data[wmap.map[y][x].items.items[0].type].item_color)
+					);
+					waddstr(main_scr, item_data[wmap.map[y][x].items.items[0].type].item_char);
+					wattroff(
+						main_scr,
+						COLOR_PAIR(item_data[wmap.map[y][x].items.items[0].type].item_color)
+					);
+				} else if (wmap.map[y][x].type != empty) {
+					wattron(
+						main_scr,
+						COLOR_PAIR(tile_data[wmap.map[y][x].ent.type].tile_color)
+					);
+					waddstr(main_scr, tile_data[wmap.map[y][x].type].tile_char);
+					wattroff(
+						main_scr,
+						COLOR_PAIR(tile_data[wmap.map[y][x].ent.type].tile_color)
+					);
 
-				wattron(main_scr, COLOR_PAIR(wmap.map[y][x].ent.type));
-				waddstr(main_scr, ent_data[wmap.map[y][x].ent.type].entity_char);
-				wattroff(main_scr, COLOR_PAIR(wmap.map[y][x].ent.type));
-
-			} else if (wmap.map[y][x].type != empty) {
-
-				wattron(main_scr, COLOR_PAIR(tile_data[wmap.map[y][x].ent.type].tile_color));
-				waddstr(main_scr, tile_data[wmap.map[y][x].type].tile_char);
-				wattroff(main_scr, COLOR_PAIR(tile_data[wmap.map[y][x].ent.type].tile_color));
-
+				}
 			}
 
 		}
 	}
-	wmove(main_scr, wmap.ent_arr[0]->pos.y-camera.y, wmap.ent_arr[0]->pos.x-camera.x);
+	wmove(
+		main_scr,
+		wmap.ent_arr[0]->pos.y-camera.y,
+		wmap.ent_arr[0]->pos.x-camera.x
+	);
 	wrefresh(main_scr);
 }
 
@@ -69,7 +91,14 @@ void draw_border(WINDOW* stdscr, vector scr_size) {
 	}
 }
 
-void draw(WINDOW* stdscr, WINDOW* main_scr, world_map wmap, vector scr_size, vector main_scr_size, char* msg) {
+void draw(
+	WINDOW* stdscr,
+	WINDOW* main_scr,
+	world_map wmap,
+	vector scr_size,
+	vector main_scr_size,
+	char* msg
+) {
 	werase(stdscr);
 	draw_border(stdscr,scr_size);
 	mvwaddstr(stdscr, 1,2,msg);
@@ -77,7 +106,13 @@ void draw(WINDOW* stdscr, WINDOW* main_scr, world_map wmap, vector scr_size, vec
 	draw_main_scr(main_scr, wmap, main_scr_size);
 }
 
-void menu_draw(WINDOW* stdscr, char* prompt, char** options, int num_options, int cur_option) {
+void menu_draw(
+	WINDOW* stdscr,
+	char* prompt,
+	char** options,
+	int num_options,
+	int cur_option
+) {
 	werase(stdscr);
 	wprintw(stdscr, "%s", prompt);
 	for (int i = 0; i < num_options; i++) {

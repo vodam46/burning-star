@@ -1,13 +1,12 @@
-
 CC=cc
 # CC=clang
-NAME = basic-roguelike
+NAME=burning-star
 OUT=bin/$(NAME)
 OUT_DEBUG=bin/$(NAME)-debug
-CFLAGS=-Wall -Wextra -pedantic -DPROJECT_DIR='"$(shell pwd)"'
-CLIBS= -lncurses -lm
+CFLAGS=-Wall -Wextra -pedantic -DPROJECT_DIR='"$(shell pwd)"' -Wunreachable-code
+CLIBS=-lncurses -lm
 
-sources=action.c ai.c drawing.c entity.c main.c map.c menu.c tile.c vector.c
+sources=action.c ai.c drawing.c entity.c item.c main.c map.c menu.c tile.c vector.c
 
 .PHONY: default debug clean count run
 

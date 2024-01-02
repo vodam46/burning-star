@@ -21,6 +21,7 @@
 #include "menu.h"
 #include "action.h"
 #include "ai.h"
+#include "item.h"
 
 int main(void) {
 	srand(time(NULL));
@@ -28,6 +29,7 @@ int main(void) {
 
 	entities_init();
 	tiles_init();
+	items_init();
 
 	// screen init
 	initscr();
@@ -135,6 +137,16 @@ int main(void) {
 				move_dir = vect_init(0, -1);
 				break;
 
+			case ('g'):
+				user_moved = pick_up_item(wmap, 0);
+				break;
+
+			case ('a'):
+				if (wmap.ent_arr[0]->inventory.num_items != 0) {
+					use_item(wmap, 0, 0);
+				}
+				break;
+
 			default:
 				user_moved = 0;
 				// sprintf(msg, "%d, %c", ch, ch);
@@ -145,10 +157,18 @@ int main(void) {
 		if (user_moved) {
 			update_dijstrka_map(wmap);
 			for (int ent_i = 1; ent_i < wmap.ent_num; ent_i++) {
+				vector ent_pos = wmap.ent_arr[ent_i]->pos;
 				if (wmap.ent_arr[ent_i]->health <= 0) {
-					// delete
+					if (rand() % 10 == 0) {
+						wmap.map[ent_pos.y][ent_pos.x].items =
+							add_to_inventory(
+								wmap.map[ent_pos.y][ent_pos.x].items,
+								item_data[health_potion].item
+							);
+					}
+					// entity killed
 					ent_killed++;
-					wmap.ent_arr[ent_i]->type = none;
+					wmap.ent_arr[ent_i]->type = none_entity;
 					for (int i = ent_i; i < wmap.ent_num-1; i++) {
 						wmap.ent_arr[i] = wmap.ent_arr[i+1];
 					}
@@ -156,10 +176,10 @@ int main(void) {
 					wmap.ent_num--;
 				}
 				vector ent_dir = vect_init(0, 0);
-				if (dijkstra_map[wmap.ent_arr[ent_i]->pos.y][wmap.ent_arr[ent_i]->pos.x].visited) {
-					ent_dir = dijkstra_map[wmap.ent_arr[ent_i]->pos.y][wmap.ent_arr[ent_i]->pos.x].dir;
+				if (dijkstra_map[ent_pos.y][ent_pos.x].visited) {
+					ent_dir = dijkstra_map[ent_pos.y][ent_pos.x].dir;
 				} else {
-					ent_dir = basic_dir(wmap.ent_arr[ent_i]->pos, wmap.ent_arr[0]->pos);
+					ent_dir = basic_dir(ent_pos, wmap.ent_arr[0]->pos);
 				}
 				ent_action(wmap, ent_i, ent_dir, wmap.size);
 			}
@@ -170,7 +190,10 @@ int main(void) {
 			if (turn_count%10 == 0) {
 				vector new_enemy_pos;
 				if (map_choice) {
-					new_enemy_pos = vect_init((rand()%((int)wmap.size.y/2))*2,(rand()%((int)wmap.size.x/2)*2));
+					new_enemy_pos = vect_init(
+						(rand()%((int)wmap.size.y/2))*2,
+						(rand()%((int)wmap.size.x/2)*2)
+					);
 				} else {
 					new_enemy_pos = vect_init((rand()%wmap.size.y),(rand()%wmap.size.x));
 				}

@@ -5,13 +5,23 @@
 #include "string.h"
 #include "drawing.h"
 
-int menu(WINDOW* stdscr, vector scr_size, char* prompt, char* options[], int num_options) {
+int menu(
+	WINDOW* stdscr,
+	vector scr_size,
+	char* prompt,
+	char* options[],
+	int num_options
+) {
 	size_t max_len = strlen(prompt);
 	for (int i = 0; i < num_options; i++)
 		if (strlen(options[i])>max_len)
 			max_len=strlen(options[i]);
-	WINDOW* menu_win = newwin(num_options+1,max_len,(int)(scr_size.y/2-num_options/2),
-			(int)(scr_size.x/2-max_len/2));
+	WINDOW* menu_win = newwin(
+		num_options+1,
+		max_len,
+		(int)(scr_size.y/2-num_options/2),
+		(int)(scr_size.x/2-max_len/2)
+	);
 	int option = -1;
 	int cur_option = 0;
 	while (option == -1) {

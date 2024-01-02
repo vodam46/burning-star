@@ -2,13 +2,14 @@
 #define TILE_H
 
 #include "entity.h"
+#include "item.h"
 
 // type of tiles
 typedef enum {
 	empty,
 	wall,
 	last_tile,
-} tile_type ;
+} tile_type;
 
 // array for rendering tiles
 extern const char* tile_name[];
@@ -16,6 +17,7 @@ typedef struct {
 	vector pos;
 	tile_type type;
 	entity ent;
+	inventory items;
 } tile;
 typedef struct {
 	tile tile;
@@ -24,9 +26,9 @@ typedef struct {
 } til_data;
 extern til_data tile_data[last_tile];
 
-void tiles_init();
+void tiles_init(void);
 
-tile tile_init(vector pos, tile_type type, entity ent);
+tile tile_init(vector pos, tile_type type, entity ent, inventory items);
 
 int tile_comp(tile left, tile right);
 
