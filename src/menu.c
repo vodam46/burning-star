@@ -33,10 +33,14 @@ int menu(
 			case(KEY_UP):
 				if (cur_option > 0)
 					cur_option--;
+				else
+					cur_option = num_options-1;
 				break;
 			case(KEY_DOWN):
 				if (cur_option < num_options-1)
 					cur_option++;
+				else
+					cur_option = 0;
 				break;
 			case(KEY_ENTER): case(10):
 				return cur_option;

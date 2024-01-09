@@ -16,9 +16,10 @@ void rect_filled(tile** wmap, vector start, vector end, tile_type type);
 void circle_empty(tile** wmap, vector center, float radius, tile_type type);
 void circle_filled(tile** wmap, vector center, float radius, tile_type type);
 
-world_map wmap_gen_tile(vector scr_size, tile_type type);
-world_map wmap_gen_maze_base(vector scr_size);
-world_map wmap_gen_bin_tree_maze(vector scr_size);
-world_map wmap_gen_directional_cave(vector scr_size);
+world_map wmap_gen_tile(vector map_size, tile_type type);
+world_map wmap_gen_maze_base(vector map_size);
+world_map wmap_gen_bin_tree_maze(vector map_size);
+world_map wmap_gen_directional_cave(vector map_size);
+world_map wmap_gen_noise(vector map_size);
 
 #endif

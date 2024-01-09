@@ -8,6 +8,7 @@
 typedef enum {
 	empty,
 	wall,
+	water,
 	last_tile,
 } tile_type;
 

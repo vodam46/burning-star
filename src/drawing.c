@@ -58,12 +58,12 @@ void draw_main_scr(WINDOW* main_scr, world_map wmap, vector scr_size) {
 				} else if (wmap.map[y][x].type != empty) {
 					wattron(
 						main_scr,
-						COLOR_PAIR(tile_data[wmap.map[y][x].ent.type].tile_color)
+						COLOR_PAIR(tile_data[wmap.map[y][x].type].tile_color)
 					);
 					waddstr(main_scr, tile_data[wmap.map[y][x].type].tile_char);
 					wattroff(
 						main_scr,
-						COLOR_PAIR(tile_data[wmap.map[y][x].ent.type].tile_color)
+						COLOR_PAIR(tile_data[wmap.map[y][x].type].tile_color)
 					);
 
 				}

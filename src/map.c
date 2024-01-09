@@ -5,7 +5,7 @@
 #include "entity.h"
 #include "map.h"
 #include "vector.h"
-#include "action.h"
+#include "noise.h"
 
 void rect_empty(tile** wmap, vector start, vector end, tile_type type) {
 	for (int y = start.y; y < end.y; y++) {
@@ -170,6 +170,32 @@ world_map wmap_gen_directional_cave(vector map_size) {
 		}
 	}
 
+
+	return wmap;
+}
+
+world_map wmap_gen_noise(vector map_size) {
+	world_map wmap = wmap_gen_tile(map_size, empty);
+
+	for (int y = 0; y < map_size.y; y++) {
+		for (int x = 0; x < map_size.x; x++) {
+			int type = (int)(noise2d(x, y, 0.125, 2)*4);
+
+			if (type == 0) {
+				wmap.map[y][x].type = water;
+			} else if (type == 1) {
+				wmap.map[y][x].type = empty;
+			} else  {
+				wmap.map[y][x].type = wall;
+			}
+		}
+	}
+
+	for (int y = 495; y < 505; y++) {
+		for (int x = 495; x < 505; x++) {
+			wmap.map[y][x].type = empty;
+		}
+	}
 
 	return wmap;
 }

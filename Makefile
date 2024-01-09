@@ -6,7 +6,7 @@ OUT_DEBUG=bin/$(NAME)-debug
 CFLAGS=-Wall -Wextra -pedantic -DPROJECT_DIR='"$(shell pwd)"' -Wunreachable-code
 CLIBS=-lncurses -lm
 
-sources=action.c ai.c drawing.c entity.c item.c main.c map.c menu.c tile.c vector.c
+sources=action.c ai.c drawing.c entity.c item.c main.c map.c menu.c noise.c tile.c vector.c
 
 .PHONY: default debug clean count run
 

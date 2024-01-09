@@ -9,6 +9,7 @@
 const char* tile_name[] = {
 	"empty",
 	"wall",
+	"water"
 };
 
 til_data tile_data[last_tile] = {0};

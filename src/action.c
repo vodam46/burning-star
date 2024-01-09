@@ -1,5 +1,3 @@
-#include <stdlib.h>
-
 #include "action.h"
 #include "entity.h"
 #include "tile.h"

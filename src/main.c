@@ -13,15 +13,16 @@
 #include <unistd.h>
 #include <locale.h>
 
-#include "tile.h"
-#include "entity.h"
-#include "map.h"
-#include "drawing.h"
-#include "vector.h"
-#include "menu.h"
 #include "action.h"
 #include "ai.h"
+#include "drawing.h"
+#include "entity.h"
 #include "item.h"
+#include "map.h"
+#include "menu.h"
+#include "noise.h"
+#include "tile.h"
+#include "vector.h"
 
 int main(void) {
 	srand(time(NULL));
@@ -30,6 +31,7 @@ int main(void) {
 	entities_init();
 	tiles_init();
 	items_init();
+	noise_init();
 
 	// screen init
 	initscr();
@@ -43,11 +45,13 @@ int main(void) {
 	init_pair(0,COLOR_WHITE,COLOR_BLACK);
 	init_pair(1,COLOR_GREEN,COLOR_BLACK);
 	init_pair(2,COLOR_RED,COLOR_YELLOW);
+	init_pair(3,COLOR_BLUE,COLOR_BLACK);
 
 	char* map_options[] = {
 		"Empty map",
 		"Maze",
 		"Cave",
+		"Noise",
 	};
 	int map_choice = menu(
 		stdscr,
@@ -71,6 +75,8 @@ int main(void) {
 		wmap = wmap_gen_bin_tree_maze(wmap.size);
 	} else if (map_choice == 2) {
 		wmap = wmap_gen_directional_cave(wmap.size);
+	} else if (map_choice == 3) {
+		wmap = wmap_gen_noise(wmap.size);
 	} else {
 		wmap = wmap_gen_tile(wmap.size, empty);
 	}
@@ -106,6 +112,7 @@ int main(void) {
 		flushinp();
 		ch = wgetch(stdscr);					// updates the user input
 		vector move_dir = vect_init(0,0);
+		vector dig_dir = vect_init(0, 0);
 		int user_moved = 1;
 		// react to user input
 		switch(ch) {
@@ -137,13 +144,48 @@ int main(void) {
 				move_dir = vect_init(0, -1);
 				break;
 
+			// picking up items
 			case ('g'):
 				user_moved = pick_up_item(wmap, 0);
 				break;
 
+			// activating items from inventory
 			case ('a'):
 				if (wmap.ent_arr[0]->inventory.num_items != 0) {
 					use_item(wmap, 0, 0);
+					user_moved = 1;
+				}
+				break;
+
+			// digging
+			case ('d'):
+				switch(wgetch(stdscr)) {
+					case(KEY_UP): case(56):
+						dig_dir = vect_init(-1, 0);
+						break;
+					case(KEY_RIGHT): case(54):
+						dig_dir = vect_init(0, +1);
+						break;
+					case(KEY_DOWN):	case(50):
+						dig_dir = vect_init(+1, 0);
+						break;
+					case(KEY_LEFT):	case(52):
+						dig_dir = vect_init(0, -1);
+						break;
+				}
+				if (
+					wmap.map[
+						dig_dir.y + wmap.ent_arr[0]->pos.y
+					][
+						dig_dir.x + wmap.ent_arr[0]->pos.x
+					].type == wall
+				) {
+					wmap.map[
+						dig_dir.y + wmap.ent_arr[0]->pos.y
+					][
+						dig_dir.x + wmap.ent_arr[0]->pos.x
+					].type = empty;
+					user_moved = 1;
 				}
 				break;
 
@@ -152,7 +194,8 @@ int main(void) {
 				// sprintf(msg, "%d, %c", ch, ch);
 				break;
 		}
-		user_moved &= ent_action(wmap, 0, move_dir, wmap.size);
+		if (!vect_comp(vect_init(0, 0), move_dir))
+			user_moved &= ent_action(wmap, 0, move_dir, wmap.size);
 
 		if (user_moved) {
 			update_dijstrka_map(wmap);
