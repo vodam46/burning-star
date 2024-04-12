@@ -191,8 +191,8 @@ world_map wmap_gen_noise(vector map_size) {
 		}
 	}
 
-	for (int y = 495; y < 505; y++) {
-		for (int x = 495; x < 505; x++) {
+	for (int y = wmap.ent_arr[0]->pos.y - 5; y < wmap.ent_arr[0]->pos.y + 5; y++) {
+		for (int x = wmap.ent_arr[0]->pos.x - 5; x < wmap.ent_arr[0]->pos.x + 5; x++) {
 			wmap.map[y][x].type = empty;
 		}
 	}

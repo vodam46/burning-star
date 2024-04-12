@@ -11,10 +11,6 @@ CRITICAL:
 graphic? - raylib, sdl
  - 2 versions - graphic, tui
 
-drawing
-	how to deal with different window sizes
-		- now only need to resize the screen areas
-
 world data structure
 
 	make it infinite (load chunks from a save file) ?
@@ -39,6 +35,7 @@ tests
 	- more entity creation
 	- more world map gen
 	- dijkstra maps
+	- key val reader
 
 CONSISTENT STYLE
 https://cs50.readthedocs.io/style/c/
@@ -66,3 +63,9 @@ move data files into different directory (~/.local, AppData)
 generalize the drawing functions -> preparations for graphics
 rewrite and refactor
 opensimplex noise
+!!! free all alloc'd memory - most of it in the init functions (check valgrind)
+valgrind make target?
+clean up the key_val_reader.c file, make it not made of spaghetti code
+	- maybe use getline?
+optimize pathfinding allocation (if dijkstra_map != NULL)
+REWRITE THE ENTIRE DIJKSTRA PATHFINDING ALG, ITS SHIT

@@ -1,5 +1,5 @@
-You
-@
-20
-5
-1
+name = You
+char = @
+health = 20
+strength = 5
+color = 1

@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "item.h"
+#include "key_val_reader.h"
 
 const char* item_name[] = {
 	"none",
@@ -18,35 +19,21 @@ void items_init(void) {
 		strcpy(file_name, data_dir);
 		strcat(file_name, item_name[i]);
 
+		pairs_arr pairs = parse_file(file_name);
+
 		item_data[i].item.type = i;
 
-		FILE* file = fopen(file_name, "r");
+		char* ite_char = get_value("char", pairs).string;
+		item_data[i].item_char = malloc((strlen(ite_char)+1) * sizeof(char));
+		strcpy(item_data[i].item_char, ite_char);
 
-		size_t len = 0;
-		char* line = NULL;
-		getline(&item_data[i].item_char, &len, file);
-		getline(&line, &len, file);
-		item_data[i].item_color = atoi(line);
-
-		char c;
-		item_data[i].item.num_stats = 0;
-		while ((c = fgetc(file) != EOF)) {
-			item_data[i].item.num_stats++;
-		}
-		item_data[i].item.num_stats--;
-
-		item_data[i].item.stats = malloc(
-				item_data[i].item.num_stats * sizeof(int)
-				);
-		rewind(file);
-		getline(&line, &len, file);
-		getline(&line, &len, file);
+		value stats = get_value("stats", pairs);
+		item_data[i].item.stats = malloc((stats.num_elements+1) * sizeof(int));
 		for (int j = 0; j <= item_data[i].item.num_stats; j++) {
-			getline(&line, &len, file);
-			item_data[i].item.stats[j] = atoi(line);
+			item_data[i].item.stats[j] = atoi(stats.array[j]);
 		}
 
-		fclose(file);
+		delete_pairs(pairs);
 	}
 }
 

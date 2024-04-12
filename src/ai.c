@@ -1,6 +1,5 @@
 #include <limits.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <sys/param.h>
 
 #include "ai.h"
@@ -57,27 +56,28 @@ void update_dijstrka_map(world_map wmap) {
 	vector neighbor;
 	int cur_iter = 0;
 
-	while (!finished && cur_iter < 1000000) {
-		finished = 1;
+	while (!finished && cur_iter < 1000) {
 		dijkstra_map[current_node.y][current_node.x].visited = 1;
 
 		for (int offset = -1; offset <= 1; offset += 2) {
 
-			int smallest_dist = INT_MAX;
-
 			neighbor = vect_init(current_node.y + offset, current_node.x);
 			if (
 				in_bounds(neighbor, vect_init(0, 0), wmap.size)
-				&& wmap.map[neighbor.y][neighbor.x].type != wall
 			) {
-				int new_dist = dijkstra_map[current_node.y][current_node.x].dist + 10;
-				if (dijkstra_map[neighbor.y][neighbor.x].dist > new_dist) {
+
+				int new_dist = INT_MAX;
+				if (wmap.map[neighbor.y][neighbor.x].type == wall) {
+					new_dist = dijkstra_map[current_node.y][current_node.x].dist + 20;
+				} else {
+					new_dist = dijkstra_map[current_node.y][current_node.x].dist + 10;
+				}
+
+				if (dijkstra_map[neighbor.y][neighbor.x].dist >= new_dist) {
 					dijkstra_map[neighbor.y][neighbor.x].dist = new_dist;
-				} else if (dijkstra_map[neighbor.y][neighbor.x].dist < smallest_dist) {
-					smallest_dist = dijkstra_map[neighbor.y][neighbor.x].dist;
-					dijkstra_map[current_node.y][current_node.x].dir = vect_sub(
-						neighbor,
-						current_node
+					dijkstra_map[neighbor.y][neighbor.x].dir = vect_sub(
+							current_node,
+							neighbor
 					);
 				}
 			}
@@ -85,32 +85,37 @@ void update_dijstrka_map(world_map wmap) {
 			neighbor = vect_init(current_node.y, current_node.x + offset);
 			if (
 				in_bounds(neighbor, vect_init(0, 0), wmap.size)
-				&& wmap.map[neighbor.y][neighbor.x].type != wall
 			) {
-				int new_dist = dijkstra_map[current_node.y][current_node.x].dist + 10;
-				if (dijkstra_map[neighbor.y][neighbor.x].dist > new_dist) {
+
+				int new_dist = INT_MAX;
+				if (wmap.map[neighbor.y][neighbor.x].type == wall) {
+					new_dist = dijkstra_map[current_node.y][current_node.x].dist + 20;
+				} else {
+					new_dist = dijkstra_map[current_node.y][current_node.x].dist + 10;
+				}
+
+				if (dijkstra_map[neighbor.y][neighbor.x].dist >= new_dist) {
 					dijkstra_map[neighbor.y][neighbor.x].dist = new_dist;
-				} else if (dijkstra_map[neighbor.y][neighbor.x].dist < smallest_dist) {
-					smallest_dist = dijkstra_map[neighbor.y][neighbor.x].dist;
-					dijkstra_map[current_node.y][current_node.x].dir = vect_sub(
-						neighbor,
-						current_node
+					dijkstra_map[neighbor.y][neighbor.x].dir = vect_sub(
+							current_node,
+							neighbor
 					);
 				}
 			}
+
 
 		}
 
 		finished = 1;
 		int smallest_dist = INT_MAX;
 		for (
-				int y = MAX(wmap.ent_arr[0]->pos.y-100, 0);
-				y < MIN(wmap.ent_arr[0]->pos.y+100, wmap.size.y);
+				int y = MAX(wmap.ent_arr[0]->pos.y-50, 0);
+				y < MIN(wmap.ent_arr[0]->pos.y+50, wmap.size.y);
 				y++
 			) {
 			for (
-					int x = MAX(wmap.ent_arr[0]->pos.x-100, 0);
-					x < MIN(wmap.ent_arr[0]->pos.x+100, 0);
+					int x = MAX(wmap.ent_arr[0]->pos.x-50, 0);
+					x < MIN(wmap.ent_arr[0]->pos.x+50, wmap.size.x);
 					x++
 				) {
 				if (

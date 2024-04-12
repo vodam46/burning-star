@@ -1,5 +1,5 @@
-Enemy
-0
-5
-1
-2
+name = Enemy	# useless
+char = 0
+health = 5
+strength = 1
+color = 2

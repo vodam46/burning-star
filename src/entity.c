@@ -1,9 +1,9 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "entity.h"
 #include "vector.h"
+#include "key_val_reader.h"
 
 const char* ent_name[] = {
 	"none",
@@ -19,31 +19,24 @@ void entities_init(void) {
 		strcpy(file_name, data_dir);
 		strcat(file_name, ent_name[i]);
 
-		FILE* file = fopen(file_name, "r");
+		pairs_arr pairs = parse_file(file_name);
 
 		ent_data[i].ent.type = i;
-		char* line = NULL;
-		size_t len = 0;
-		getline(&line, &len, file); // name
 
-		getline(&line, &len, file); // char
-		ent_data[i].entity_char = malloc(len*sizeof(char));
-		strcpy(ent_data[i].entity_char, line);
+		char* ent_char = get_value("char", pairs).string;
+		ent_data[i].entity_char = malloc((strlen(ent_char)+1) * sizeof(char));
+		strcpy(ent_data[i].entity_char, ent_char);
 
-		getline(&line, &len, file); // hp
-		int hp = atoi(line);
+		int hp = atoi(get_value("health", pairs).string);
 		ent_data[i].ent.health = hp;
 		ent_data[i].ent.maxhealth = hp;
 
-		getline(&line, &len, file); // strength
-		ent_data[i].ent.strength = atoi(line);
+		ent_data[i].ent.strength = atoi(get_value("strength", pairs).string);
 
-		getline(&line, &len, file); // color
-		ent_data[i].entity_color = atoi(line);
+		ent_data[i].entity_color = atoi(get_value("color", pairs).string);
 
 		ent_data[i].ent.inventory = (inventory){0};
-
-		fclose(file);
+		delete_pairs(pairs);
 	}
 }
 

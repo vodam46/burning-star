@@ -45,8 +45,10 @@ int menu(
 			case(KEY_ENTER): case(10):
 				return cur_option;
 			case('q'):
+				delwin(menu_win);
 				return -1;
 		}
 	}
+	delwin(menu_win);
 	return -1;
 }

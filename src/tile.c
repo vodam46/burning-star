@@ -5,6 +5,7 @@
 // custom libraries
 #include "tile.h"
 #include "entity.h"
+#include "key_val_reader.h"
 
 const char* tile_name[] = {
 	"empty",
@@ -21,21 +22,17 @@ void tiles_init(void) {
 		strcpy(file_name, data_dir);
 		strcat(file_name, tile_name[i]);
 
-		FILE* file = fopen(file_name, "r");
+		pairs_arr pairs = parse_file(file_name);
 
 		tile_data[i].tile.type = i;
-		char* line = NULL;
-		size_t len = 0;
-		getline(&line, &len, file); // name
 
-		getline(&line, &len, file); // char
-		tile_data[i].tile_char = malloc(len*sizeof(char));
-		strcpy(tile_data[i].tile_char, line);
+		char* tile_char = get_value("char", pairs).string;
+		tile_data[i].tile_char = malloc((strlen(tile_char)+1) * sizeof(char));
+		strcpy(tile_data[i].tile_char, tile_char);
 
-		getline(&line, &len, file); // color
-		tile_data[i].tile_color = atoi(line);
+		tile_data[i].tile_color = atoi(get_value("color", pairs).string);
 
-		fclose(file);
+		delete_pairs(pairs);
 	}
 }
 

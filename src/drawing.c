@@ -10,6 +10,8 @@
 #include "map.h"
 #include "tile.h"
 
+#include "ai.h"
+
 int scrolling_map(int player_pos, int half_screen, int map_width) {
 	if (player_pos < half_screen) {
 		return 0;
@@ -40,7 +42,9 @@ void draw_main_scr(WINDOW* main_scr, world_map wmap, vector scr_size) {
 						main_scr,
 						COLOR_PAIR(ent_data[wmap.map[y][x].ent.type].entity_color)
 					);
-					waddstr(main_scr, ent_data[wmap.map[y][x].ent.type].entity_char);
+					waddstr(
+						main_scr, ent_data[wmap.map[y][x].ent.type].entity_char
+					);
 					wattroff(
 						main_scr,
 						COLOR_PAIR(ent_data[wmap.map[y][x].ent.type].entity_color)
@@ -61,6 +65,7 @@ void draw_main_scr(WINDOW* main_scr, world_map wmap, vector scr_size) {
 						COLOR_PAIR(tile_data[wmap.map[y][x].type].tile_color)
 					);
 					waddstr(main_scr, tile_data[wmap.map[y][x].type].tile_char);
+					waddstr(main_scr, "\n");
 					wattroff(
 						main_scr,
 						COLOR_PAIR(tile_data[wmap.map[y][x].type].tile_color)

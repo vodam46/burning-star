@@ -131,15 +131,15 @@ int main(void) {
 			case(KEY_UP): case(56):				// y -
 				move_dir = vect_init(-1, 0);
 				break;
-				// right arrow or 6
+			// right arrow or 6
 			case(KEY_RIGHT): case(54):			// x +
 				move_dir = vect_init(0, +1);
 				break;
-				// down arrow or 2
+			// down arrow or 2
 			case(KEY_DOWN):	case(50):			// y +
 				move_dir = vect_init(+1, 0);
 				break;
-				// left arrow or 4
+			// left arrow or 4
 			case(KEY_LEFT):	case(52):			// x -
 				move_dir = vect_init(0, -1);
 				break;
@@ -187,6 +187,13 @@ int main(void) {
 					].type = empty;
 					user_moved = 1;
 				}
+				break;
+
+			case KEY_RESIZE:
+				delwin(main_scr);
+				getmaxyx(stdscr, scr_size.y, scr_size.x);
+				main_scr_size = vect_init(scr_size.y-4, scr_size.x-2);
+				main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
 				break;
 
 			default:
@@ -255,11 +262,26 @@ int main(void) {
 	getch();
 
 
-	endwin();		// end ncurses mode
-	for (int y = 0; y < scr_size.y; y++)
+	endwin();
+
+	for (int y = 0; y < scr_size.y; y++) {
 		free(wmap.map[y]);
-	free(wmap.map);		// free the memory for the world map
-	free(wmap.ent_arr);	// free the memory for the entity array
+		free(dijkstra_map[y]);
+	}
+	free(wmap.map);
+	free(dijkstra_map);
+
+	free(wmap.ent_arr);
+
+	for (int i = 0; i < last_ent; i++) {
+		free(ent_data[i].entity_char);
+		free(ent_data[i].ent.inventory.items);
+	}
+	for (int i = 0; i < last_item; i++) {
+		free(item_data[i].item_char);
+		free(item_data[i].item.stats);
+	}
+
 	printf("%d enemies killed\n", ent_killed);
 	return 0;
 }

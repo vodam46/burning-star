@@ -6,23 +6,30 @@ OUT_DEBUG=bin/$(NAME)-debug
 CFLAGS=-Wall -Wextra -pedantic -DPROJECT_DIR='"$(shell pwd)"' -Wunreachable-code
 CLIBS=-lncurses -lm
 
-sources=action.c ai.c drawing.c entity.c item.c main.c map.c menu.c noise.c tile.c vector.c
+sources=action.c ai.c drawing.c entity.c item.c key_val_reader.c main.c map.c menu.c noise.c tile.c vector.c
 
-.PHONY: default debug clean count run
+.PHONY: clean count debug debug-build default run
 
 default: $(OUT)
 
 clean:
-	-rm -Rf obj dep bin
+	-rm -Rf obj dep bin valgrind
 
 run: $(OUT)
 	./$(OUT)
 
-debug: CFLAGS+=-g
-debug: OUT=$(OUT_DEBUG)
-debug:  | obj dep bin
-	$(CC) $(CFLAGS) $(addprefix src/, $(sources)) -o $(OUT) $(CLIBS)
-	gdb $(OUT)
+
+
+
+debug-build: CFLAGS+=-g
+debug-build:  | obj dep bin
+	$(CC) $(CFLAGS) $(addprefix src/, $(sources)) -o $(OUT_DEBUG) $(CLIBS)
+
+debug: debug-build
+	gdb $(OUT_DEBUG)
+
+valgrind: debug-build
+	valgrind --log-file="valgrind" --track-fds=yes --track-origins=yes --leak-check=full ./$(OUT_DEBUG)
 
 count:
 	cloc src/*

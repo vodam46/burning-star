@@ -48,6 +48,9 @@ int ent_action(
 			// update the entity array
 			wmap.ent_arr[ent_arr_id] = &wmap.map[new.y][new.x].ent;
 			user_moved = 1;
+		} else if (ent_arr_id != 0 && wmap.map[new.y][new.x].type == wall) {
+			wmap.map[new.y][new.x].type = empty;
+			user_moved = 1;
 		}
 	}
 	return user_moved;

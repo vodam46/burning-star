@@ -12,6 +12,7 @@ typedef struct {
 } dijkstra_map_node;
 extern dijkstra_map_node** dijkstra_map;
 
+extern int map_allocated;
 vector basic_dir(vector start, vector end);
 void update_dijstrka_map(world_map wmap);
 
