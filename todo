@@ -10,6 +10,7 @@ CRITICAL:
 
 graphic? - raylib, sdl
  - 2 versions - graphic, tui
+ if i use graphics, then i must use the urizen 1bit tileset
 
 world data structure
 
@@ -43,7 +44,6 @@ https://www.cs.umd.edu/~nelson/classes/resources/cstyleguide/
 https://github.com/MaJerle/c-code-style
 https://suckless.org/coding_style/
 
-make code readable -> longer variable names ?
 add a license (not needed yet?)
 wasd key input? vi key input? numpad diagonal input? (could be done through settings)
 	- settings
@@ -69,3 +69,42 @@ clean up the key_val_reader.c file, make it not made of spaghetti code
 	- maybe use getline?
 optimize pathfinding allocation (if dijkstra_map != NULL)
 REWRITE THE ENTIRE DIJKSTRA PATHFINDING ALG, ITS SHIT
+fix draw_main_scr adding an empty inaccessible line to the bottom of the map,
+	possibly even to the side
+overmap tiles?
+	world would be travelled by moving between the overmap tiles, each of a
+	different type
+
+more tiles!
+	- doors? + |
+	- floor types - wooden, stone, metal?
+	- trees, plants - grass
+	- stairs - > <
+	- statues?
+	- furniture - tables, chairs
+	- bones/graves?
+	- fire
+	- wooden walls
+	- path
+
+more enemies
+	- goblins
+	- trolls
+	- elementals
+	- mages
+
+more items
+	- potions
+		- mana
+		- energy?
+		- shield
+	- weapons
+	- armor
+
+maybe save in a different file format (plain text?)
+ranged attacks
+	- for enemies too
+fix various rendering bugs
+	- line of @ between player and enemy
+	- item that wasnt there
+better algorithm for spawning enemies

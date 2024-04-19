@@ -1,3 +1,4 @@
+
 #if defined(__CYGWIN__)
 #include <ncurses/ncurses.h>
 #elif defined(unix)
@@ -52,6 +53,7 @@ int main(void) {
 		"Maze",
 		"Cave",
 		"Noise",
+		"Load previous"
 	};
 	int map_choice = menu(
 		stdscr,
@@ -69,26 +71,35 @@ int main(void) {
 
 	world_map wmap;
 	wmap.size = vect_init(1000, 1000);
-	if (map_choice == 0) {
-		wmap = wmap_gen_tile(wmap.size, empty);
-	} else if (map_choice == 1) {
-		wmap = wmap_gen_bin_tree_maze(wmap.size);
-	} else if (map_choice == 2) {
-		wmap = wmap_gen_directional_cave(wmap.size);
-	} else if (map_choice == 3) {
-		wmap = wmap_gen_noise(wmap.size);
-	} else {
-		wmap = wmap_gen_tile(wmap.size, empty);
+	switch (map_choice) {
+		case 0:
+			wmap = wmap_gen_tile(wmap.size, empty);
+			break;
+		case 1:
+			wmap = wmap_gen_bin_tree_maze(wmap.size);
+			break;
+		case 2:
+			wmap = wmap_gen_directional_cave(wmap.size);
+			break;
+		case 3:
+			wmap = wmap_gen_noise(wmap.size);
+			break;
+		case 4:
+			wmap = load_map("wmap");
+			break;
+		default:
+			wmap = wmap_gen_tile(wmap.size, empty);
+			break;
 	}
 
 	char msg[256] = "";
-	int turn_count = 0;
-	int ent_killed = 0;
 	char ent_num_msg[100] = "";
 
 	int ch = 0;
+	int run = 1;
+	int died = 0;
 	// main game loop
-	while (ch != 'q') {
+	while (run) {
 		if (wmap.ent_num-1 == 0)
 			sprintf(ent_num_msg, "no enemy alive");
 		else if (wmap.ent_num-1 == 1)
@@ -101,9 +112,9 @@ int main(void) {
 			wmap.ent_arr[0]->health,
 			wmap.ent_arr[0]->maxhealth,
 			wmap.ent_arr[0]->strength,
-			ent_killed,
+			wmap.ent_killed,
 			ent_num_msg,
-			turn_count,
+			wmap.turn_count,
 			wmap.ent_arr[0]->pos.y,
 			wmap.ent_arr[0]->pos.x
 		);
@@ -196,6 +207,16 @@ int main(void) {
 				main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
 				break;
 
+			case 'q':
+				run = 0;
+				user_moved = 0;
+				break;
+			case 's':
+				save_map(wmap, "wmap");
+				mvprintw(1, 1, "saving");
+				user_moved = 0;
+				break;
+
 			default:
 				user_moved = 0;
 				// sprintf(msg, "%d, %c", ch, ch);
@@ -217,7 +238,7 @@ int main(void) {
 							);
 					}
 					// entity killed
-					ent_killed++;
+					wmap.ent_killed++;
 					wmap.ent_arr[ent_i]->type = none_entity;
 					for (int i = ent_i; i < wmap.ent_num-1; i++) {
 						wmap.ent_arr[i] = wmap.ent_arr[i+1];
@@ -234,10 +255,12 @@ int main(void) {
 				ent_action(wmap, ent_i, ent_dir, wmap.size);
 			}
 
-			if (wmap.ent_arr[0]->health <= 0)
+			if (wmap.ent_arr[0]->health <= 0) {
+				died = 1;
 				break;
+			}
 
-			if (turn_count%10 == 0) {
+			if (wmap.turn_count%10 == 0) {
 				vector new_enemy_pos;
 				if (map_choice) {
 					new_enemy_pos = vect_init(
@@ -252,24 +275,28 @@ int main(void) {
 				wmap.ent_num=create_entity(wmap,new_enemy_pos,enemy);
 			}
 
-			turn_count++;
+			wmap.turn_count++;
 		}
 	}
-	clear();
-	sprintf(msg,"You died, score: %d, turns played: %d", ent_killed, turn_count);
-	mvprintw((int)scr_size.y/2,(int)scr_size.x/2-(int)strlen(msg)/2,"%s",msg);
-	refresh();
-	getch();
+	if (died) {
+		clear();
+		sprintf(msg,"You died, score: %d, turns played: %d", wmap.ent_killed, wmap.turn_count);
+		mvprintw((int)scr_size.y/2,(int)scr_size.x/2-(int)strlen(msg)/2,"%s",msg);
+		refresh();
+		getch();
+	}
 
 
 	endwin();
 
 	for (int y = 0; y < scr_size.y; y++) {
 		free(wmap.map[y]);
-		free(dijkstra_map[y]);
+		if (map_allocated)
+			free(dijkstra_map[y]);
 	}
 	free(wmap.map);
-	free(dijkstra_map);
+	if (map_allocated)
+		free(dijkstra_map);
 
 	free(wmap.ent_arr);
 
@@ -282,6 +309,6 @@ int main(void) {
 		free(item_data[i].item.stats);
 	}
 
-	printf("%d enemies killed\n", ent_killed);
+	printf("%d enemies killed\n", wmap.ent_killed);
 	return 0;
 }

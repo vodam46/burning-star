@@ -10,8 +10,6 @@
 #include "map.h"
 #include "tile.h"
 
-#include "ai.h"
-
 int scrolling_map(int player_pos, int half_screen, int map_width) {
 	if (player_pos < half_screen) {
 		return 0;

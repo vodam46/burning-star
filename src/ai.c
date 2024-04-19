@@ -56,7 +56,7 @@ void update_dijstrka_map(world_map wmap) {
 	vector neighbor;
 	int cur_iter = 0;
 
-	while (!finished && cur_iter < 1000) {
+	while (!finished && cur_iter < 2500) {
 		dijkstra_map[current_node.y][current_node.x].visited = 1;
 
 		for (int offset = -1; offset <= 1; offset += 2) {

@@ -70,7 +70,6 @@ pairs_arr parse_file(char* filename) {
 					if (ch == ']' || ch == ' ') continue;
 					if (ch == ',') {
 						num_elements++;
-						fprintf(stderr, "elem: %d\n", num_elements);
 					} else {
 						line_len++;
 					}
@@ -89,7 +88,6 @@ pairs_arr parse_file(char* filename) {
 
 					if (array) {
 						if (ch != ',') {
-							fprintf(stderr, "%d: %c\n", cur_element, ch);
 							strncat(pairs[i].value.array[cur_element], (char*)&ch, 1);
 						} else if (ch == ',') {
 							cur_element++;

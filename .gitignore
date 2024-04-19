@@ -2,3 +2,5 @@ obj
 dep
 bin
 Session.vim
+wmap
+time

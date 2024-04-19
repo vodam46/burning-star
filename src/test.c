@@ -1,12 +1,10 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "vector.h"
 #include "ai.h"
 #include "entity.h"
 #include "tile.h"
 #include "map.h"
-#include "action.h"
 
 #define assert(test) tests_run++; if(!(test)) {\
 	tests_failed++;\
@@ -27,21 +25,25 @@ int main() {
 	assert(vect_comp(basic_dir(vect_init(0,0),vect_init(0,1)),vect_init(0,1)))
 
 	// entity
-	assert(ent_comp(ent_init(vect_init(0,0),player,1,1,1),(entity){player,(vector){0,0},1,1,1}));
+	assert(ent_comp(
+		ent_init(vect_init(0,0), player, 1, 1, 1, (inventory){0}),
+		(entity){player,(vector){0,0},1,1,1,(inventory){0}}
+	));
 
 	// entity creation
 	world_map wmap;
 	entities_init();
 	wmap = wmap_gen_tile((vector){1,1}, empty);
 	assert(wmap.ent_num==1);
-	assert(ent_comp(wmap.map[0][0].ent,ent_init(vect_init(0,0),player,5,20,20)));
+	assert(ent_comp(wmap.map[0][0].ent,ent_init(vect_init(0,0),player,5,20,20,(inventory){0})));
 
 	// tile
 	tiles_init();
 	assert(tile_data[1].tile.type == wall);
 	assert(tile_comp(
-				tile_init(vect_init(0,0),empty,ent_init(vect_init(0,0),player,1,1,1), (item){0}),
-				(tile){(vector){0,0},empty,(entity){player,(vector){0,0},1,1,1}}));
+		tile_init(vect_init(0,0),empty,ent_init(vect_init(0,0),player,1,1,1,(inventory){0}),(inventory){0}),
+		(tile){(vector){0,0},empty,(entity){player,(vector){0,0},1,1,1,(inventory){0}},(inventory){0}}
+	));
 
 	// map
 	wmap = wmap_gen_tile((vector){10,10}, wall);

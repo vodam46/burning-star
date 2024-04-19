@@ -1,6 +1,11 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#ifdef MEASURE_TIME
+#include <time.h>
+#endif
 
+#include "item.h"
 #include "tile.h"
 #include "entity.h"
 #include "map.h"
@@ -49,12 +54,130 @@ void circle_filled(tile** wmap, vector center, float radius, tile_type type) {
 	}
 }
 
+
+void save_map(world_map wmap, char* file_name) {
+#ifdef MEASURE_TIME
+	clock_t begin = clock();
+#endif
+
+	FILE* file = fopen(file_name, "w");
+	file = freopen(file_name, "ab", file);
+
+	fwrite(&SEED, sizeof(int), 1, file);
+	fwrite(hash, sizeof(int), 256, file);
+	fwrite(&wmap.size, sizeof(vector), 1, file);
+	fwrite(&wmap.ent_num, sizeof(int), 1, file);
+	fwrite(&wmap.turn_count, sizeof(int), 1, file);
+	fwrite(&wmap.ent_killed, sizeof(int), 1, file);
+
+	for (int y = 0; y < wmap.size.y; y++) {
+		for (int x = 0; x < wmap.size.x; x++) {
+			fwrite(&wmap.map[y][x].type, sizeof(vector), 1, file);
+			fwrite(&wmap.map[y][x].items.num_items, sizeof(int), 1, file);
+			for (int i = 0; i < wmap.map[y][x].items.num_items; i++) {
+				fwrite(&wmap.map[y][x].items.items[i].type, sizeof(int), 1, file);
+			}
+
+			fwrite(&wmap.map[y][x].ent.type, sizeof(entity_type), 1, file);
+			fwrite(&wmap.map[y][x].ent.health, sizeof(int), 1, file);
+			fwrite(&wmap.map[y][x].ent.strength, sizeof(int), 1, file);
+			fwrite(&wmap.map[y][x].ent.inventory.num_items, sizeof(int), 1, file);
+			for (int i = 0; i < wmap.map[y][x].ent.inventory.num_items; i++) {
+				fwrite(&wmap.map[y][x].ent.inventory.items[i].type, sizeof(int), 1, file);
+			}
+		}
+	}
+
+	for (int i = 0; i < wmap.ent_num; i++) {
+		fwrite(&wmap.ent_arr[i]->pos, sizeof(vector), 1, file);
+	}
+
+	fclose(file);
+
+#ifdef MEASURE_TIME
+	clock_t end = clock();
+	FILE* time = fopen("time", "a");
+	fprintf(time, "save: %f\n", (double)(end-begin)/CLOCKS_PER_SEC);
+	fclose(time);
+#endif
+}
+
+world_map load_map(char* file_name) {
+#ifdef MEASURE_TIME
+	clock_t begin = clock();
+#endif
+
+	world_map wmap;
+	FILE* file = fopen(file_name, "rb");
+	fread(&SEED, sizeof(int), 1, file);
+	fread(hash, sizeof(int), 256, file);
+	fread(&wmap.size, sizeof(vector), 1, file);
+	fread(&wmap.ent_num, sizeof(int), 1, file);
+	fread(&wmap.turn_count, sizeof(int), 1, file);
+	fread(&wmap.ent_killed, sizeof(int), 1, file);
+
+	wmap.map = malloc(wmap.size.y * sizeof(tile*));
+	for (int y = 0; y < wmap.size.y; y++) {
+		wmap.map[y] = malloc(wmap.size.x * sizeof(tile));
+		for (int x = 0; x < wmap.size.x; x++) {
+
+			fread(&wmap.map[y][x].type, sizeof(vector), 1, file);
+			wmap.map[y][x].pos = vect_init(y, x);
+			int item_type;
+			int num_items;
+			fread(&num_items, sizeof(int), 1, file);
+			for (int i = 0; i < num_items; i++) {
+				fread(&item_type, sizeof(int), 1, file);
+				wmap.map[y][x].items = add_to_inventory(
+						wmap.map[y][x].items,
+						item_data[item_type].item
+						);
+			}
+
+			fread(&wmap.map[y][x].ent.type, sizeof(entity_type), 1, file);
+			fread(&wmap.map[y][x].ent.health, sizeof(int), 1, file);
+			fread(&wmap.map[y][x].ent.strength, sizeof(int), 1, file);
+
+			fread(&num_items, sizeof(int), 1, file);
+			for (int i = 0; i < num_items; i++) {
+				fread(&item_type, sizeof(int), 1, file);
+				wmap.map[y][x].ent.inventory = add_to_inventory(
+					wmap.map[y][x].ent.inventory,
+					item_data[item_type].item
+				);
+			}
+			wmap.map[y][x].ent.pos = vect_init(y, x);
+
+		}
+	}
+
+	wmap.ent_arr = malloc(wmap.size.y * wmap.size.x * sizeof(entity));
+	vector vec;
+	for (int i = 0; i < wmap.ent_num; i++) {
+		fread(&vec, sizeof(vector), 1, file);
+		wmap.ent_arr[i] = &wmap.map[vec.y][vec.x].ent;
+	}
+
+	fclose(file);
+
+#ifdef MEASURE_TIME
+	clock_t end = clock();
+	FILE* time = fopen("time", "a");
+	fprintf(time, "load: %f\n", (double)(end-begin)/CLOCKS_PER_SEC);
+#endif
+
+	return wmap;
+}
+
+
 // world generation
 // map_size.y is the height
 // map_size.x is the width
 world_map wmap_gen_tile(vector map_size, tile_type type) {
 
 	world_map wmap;
+	wmap.turn_count = 0;
+	wmap.ent_killed = 0;
 	wmap.map = malloc(map_size.y * sizeof(tile));
 	wmap.size = map_size;
 
@@ -199,5 +322,3 @@ world_map wmap_gen_noise(vector map_size) {
 
 	return wmap;
 }
-
-#define world_gen(map_size) wmap_gen_directional_cave
