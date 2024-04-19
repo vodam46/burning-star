@@ -8,7 +8,7 @@ typedef struct {
 	entity** ent_arr;
 	int ent_num;
 	vector size;
-	int turn_count, ent_killed;
+	int turn_count, ent_killed, enemy_spawn_num;
 } world_map;
 
 void rect_empty(tile** wmap, vector start, vector end, tile_type type);

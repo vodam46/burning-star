@@ -78,20 +78,22 @@ overmap tiles?
 more tiles!
 	- doors? + |
 	- floor types - wooden, stone, metal?
-	- trees, plants - grass
+	- trees, plants - grass  - ", O (trunk)
 	- stairs - > <
-	- statues?
-	- furniture - tables, chairs
+	- statues? - weird unicode letters
+	- furniture - tables, chairs - T? Π?
 	- bones/graves?
 	- fire
-	- wooden walls
-	- path
+	- wooden walls - different color? #
+	- path - . , :
 
-more enemies
+more enemies - letters?
 	- goblins
 	- trolls
 	- elementals
 	- mages
+	- dragons
+	- slimes
 
 more items
 	- potions

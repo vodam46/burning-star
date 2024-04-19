@@ -69,6 +69,7 @@ void save_map(world_map wmap, char* file_name) {
 	fwrite(&wmap.ent_num, sizeof(int), 1, file);
 	fwrite(&wmap.turn_count, sizeof(int), 1, file);
 	fwrite(&wmap.ent_killed, sizeof(int), 1, file);
+	fwrite(&wmap.enemy_spawn_num, sizeof(int), 1, file);
 
 	for (int y = 0; y < wmap.size.y; y++) {
 		for (int x = 0; x < wmap.size.x; x++) {
@@ -115,6 +116,7 @@ world_map load_map(char* file_name) {
 	fread(&wmap.ent_num, sizeof(int), 1, file);
 	fread(&wmap.turn_count, sizeof(int), 1, file);
 	fread(&wmap.ent_killed, sizeof(int), 1, file);
+	fread(&wmap.enemy_spawn_num, sizeof(int), 1, file);
 
 	wmap.map = malloc(wmap.size.y * sizeof(tile*));
 	for (int y = 0; y < wmap.size.y; y++) {
@@ -178,6 +180,7 @@ world_map wmap_gen_tile(vector map_size, tile_type type) {
 	world_map wmap;
 	wmap.turn_count = 0;
 	wmap.ent_killed = 0;
+	wmap.enemy_spawn_num = 10;
 	wmap.map = malloc(map_size.y * sizeof(tile));
 	wmap.size = map_size;
 

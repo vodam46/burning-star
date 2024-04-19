@@ -260,7 +260,11 @@ int main(void) {
 				break;
 			}
 
-			if (wmap.turn_count%10 == 0) {
+			if (
+				wmap.enemy_spawn_num >= 0 && (
+					rand() % (20 - wmap.enemy_spawn_num + 1) + wmap.enemy_spawn_num
+				) == wmap.enemy_spawn_num
+			) {
 				vector new_enemy_pos;
 				if (map_choice) {
 					new_enemy_pos = vect_init(
@@ -273,9 +277,11 @@ int main(void) {
 				if (vect_comp(new_enemy_pos, wmap.ent_arr[0]->pos))
 					new_enemy_pos = vect_init(rand()%2*wmap.size.y,rand()%2*wmap.size.x);
 				wmap.ent_num=create_entity(wmap,new_enemy_pos,enemy);
+				wmap.enemy_spawn_num -= 10;
 			}
 
 			wmap.turn_count++;
+			wmap.enemy_spawn_num++;
 		}
 	}
 	if (died) {
