@@ -19,11 +19,13 @@ typedef struct {
 	tile_type type;
 	entity ent;
 	inventory items;
+	unsigned int visible : 1, seen : 1;
 } tile;
 typedef struct {
 	tile tile;
 	char* tile_char;
 	int tile_color;
+	unsigned int walkable : 1, see_through : 1;
 } til_data;
 extern til_data tile_data[last_tile];
 

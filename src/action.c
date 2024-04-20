@@ -1,8 +1,12 @@
+#include <stdlib.h>
+#include <string.h>
+
 #include "action.h"
 #include "entity.h"
 #include "tile.h"
 #include "map.h"
 #include "item.h"
+#include "menu.h"
 
 // move entity from old_pos to new_pos, ent_arr_id is the position in ent_arr
 int ent_action(
@@ -12,7 +16,7 @@ int ent_action(
 	vector scr_size
 ) {
 	vector old = wmap.ent_arr[ent_arr_id]->pos;
-	vector new = vect_add(wmap.ent_arr[ent_arr_id]->pos, pos_change);
+	vector new = vect_add(old, pos_change);
 
 	// move only if new_pos is within the bounds of the screen
 	// and if the new tile isnt a wall
@@ -26,7 +30,7 @@ int ent_action(
 			user_moved = 1;
 		}
 		if (
-			wmap.map[new.y][new.x].type != wall
+			tile_data[wmap.map[new.y][new.x].type].walkable
 			&& wmap.map[new.y][new.x].ent.type == none_entity
 		) {
 
@@ -48,12 +52,24 @@ int ent_action(
 			// update the entity array
 			wmap.ent_arr[ent_arr_id] = &wmap.map[new.y][new.x].ent;
 			user_moved = 1;
-		} else if (ent_arr_id != 0 && wmap.map[new.y][new.x].type == wall) {
-			wmap.map[new.y][new.x].type = empty;
-			user_moved = 1;
+		} else if (ent_arr_id != 0) {
+			user_moved = dig(wmap, old, pos_change);
 		}
 	}
 	return user_moved;
+}
+
+int dig(world_map wmap, vector pos, vector dir) {
+	vector new_pos = vect_add(pos, dir);
+	if (
+		in_bounds(new_pos, vect_init(0, 0), wmap.size) &&
+		wmap.map[new_pos.y][new_pos.x].type == wall
+	) {
+		wmap.map[new_pos.y][new_pos.x].type = empty;
+	} else {
+		return 0;
+	}
+	return 1;
 }
 
 int create_entity(world_map wmap, vector pos, entity_type type) {
@@ -81,14 +97,27 @@ int pick_up_item(world_map map, int ent_i) {
 	return 0;
 }
 
-int use_item(world_map map, int ent_i, int inv_i) {
-	item ite = map.ent_arr[ent_i]->inventory.items[inv_i];
-	map.ent_arr[ent_i]->inventory = remove_from_inventory(map.ent_arr[ent_i]->inventory, inv_i);
+int use_item_from_inventory(WINDOW* stdscr, vector scr_size, world_map wmap, int ent_i) {
+	char** item_names = malloc(wmap.ent_arr[0]->inventory.num_items);
+	for (int i = 0; i < wmap.ent_arr[ent_i]->inventory.num_items; i++) {
+		item_names[0] = calloc((strlen(item_data[wmap.ent_arr[ent_i]->inventory.items[i].type].item_name)+1),sizeof(char));
+		strcpy(item_names[i], item_data[wmap.ent_arr[ent_i]->inventory.items[i].type].item_name);
+	}
+	int choice = menu(stdscr, scr_size, "Choose item to use", item_names, wmap.ent_arr[0]->inventory.num_items);
+	if (choice > 0)
+		return use_item(wmap, ent_i, choice);
+	else
+		return -1;
+}
+
+int use_item(world_map wmap, int ent_i, int inv_i) {
+	item ite = wmap.ent_arr[ent_i]->inventory.items[inv_i];
+	wmap.ent_arr[ent_i]->inventory = remove_from_inventory(wmap.ent_arr[ent_i]->inventory, inv_i);
 	int new_health;
 	switch(ite.type) {
 		case(health_potion):
-			new_health = map.ent_arr[ent_i]->health + ite.stats[0];
-			map.ent_arr[ent_i]->health = new_health <= map.ent_arr[ent_i]->maxhealth ? new_health : map.ent_arr[ent_i]->maxhealth;
+			new_health = wmap.ent_arr[ent_i]->health + ite.stats[0];
+			wmap.ent_arr[ent_i]->health = new_health <= wmap.ent_arr[ent_i]->maxhealth ? new_health : wmap.ent_arr[ent_i]->maxhealth;
 			return 1;
 			break;
 		default:

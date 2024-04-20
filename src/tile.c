@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -31,6 +30,10 @@ void tiles_init(void) {
 		strcpy(tile_data[i].tile_char, tile_char);
 
 		tile_data[i].tile_color = atoi(get_value("color", pairs).string);
+
+		tile_data[i].walkable = atoi(get_value("walkable", pairs).string);
+
+		tile_data[i].see_through = atoi(get_value("see_through", pairs).string);
 
 		delete_pairs(pairs);
 	}

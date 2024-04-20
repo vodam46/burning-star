@@ -47,6 +47,7 @@ int main(void) {
 	init_pair(1,COLOR_GREEN,COLOR_BLACK);
 	init_pair(2,COLOR_RED,COLOR_YELLOW);
 	init_pair(3,COLOR_BLUE,COLOR_BLACK);
+	init_pair(4,COLOR_BLUE,COLOR_BLACK);
 
 	char* map_options[] = {
 		"Empty map",
@@ -118,6 +119,7 @@ int main(void) {
 			wmap.ent_arr[0]->pos.y,
 			wmap.ent_arr[0]->pos.x
 		);
+		calculate_fov(wmap);
 		draw(stdscr, main_scr, wmap, scr_size, main_scr_size, msg);
 
 		flushinp();
@@ -162,10 +164,9 @@ int main(void) {
 
 			// activating items from inventory
 			case ('a'):
-				if (wmap.ent_arr[0]->inventory.num_items != 0) {
-					use_item(wmap, 0, 0);
-					user_moved = 1;
-				}
+				if (wmap.ent_arr[0]->inventory.num_items != 0)
+					user_moved = use_item_from_inventory(stdscr, scr_size, wmap, 0);
+				else user_moved = 0;
 				break;
 
 			// digging
@@ -184,20 +185,7 @@ int main(void) {
 						dig_dir = vect_init(0, -1);
 						break;
 				}
-				if (
-					wmap.map[
-						dig_dir.y + wmap.ent_arr[0]->pos.y
-					][
-						dig_dir.x + wmap.ent_arr[0]->pos.x
-					].type == wall
-				) {
-					wmap.map[
-						dig_dir.y + wmap.ent_arr[0]->pos.y
-					][
-						dig_dir.x + wmap.ent_arr[0]->pos.x
-					].type = empty;
-					user_moved = 1;
-				}
+				user_moved = dig(wmap, wmap.ent_arr[0]->pos, dig_dir);
 				break;
 
 			case KEY_RESIZE:
@@ -205,6 +193,7 @@ int main(void) {
 				getmaxyx(stdscr, scr_size.y, scr_size.x);
 				main_scr_size = vect_init(scr_size.y-4, scr_size.x-2);
 				main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
+				user_moved = 0;
 				break;
 
 			case 'q':
@@ -217,6 +206,9 @@ int main(void) {
 				user_moved = 0;
 				break;
 
+			case '.':
+				break;
+
 			default:
 				user_moved = 0;
 				// sprintf(msg, "%d, %c", ch, ch);
@@ -226,11 +218,11 @@ int main(void) {
 			user_moved &= ent_action(wmap, 0, move_dir, wmap.size);
 
 		if (user_moved) {
-			update_dijstrka_map(wmap);
+			update_dijkstra_map(wmap);
 			for (int ent_i = 1; ent_i < wmap.ent_num; ent_i++) {
 				vector ent_pos = wmap.ent_arr[ent_i]->pos;
 				if (wmap.ent_arr[ent_i]->health <= 0) {
-					if (rand() % 10 == 0) {
+					if (rand() % 1 == 0) {
 						wmap.map[ent_pos.y][ent_pos.x].items =
 							add_to_inventory(
 								wmap.map[ent_pos.y][ent_pos.x].items,

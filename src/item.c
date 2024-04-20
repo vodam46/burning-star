@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -22,6 +21,10 @@ void items_init(void) {
 		pairs_arr pairs = parse_file(file_name);
 
 		item_data[i].item.type = i;
+
+		char* item_name = get_value("name", pairs).string;
+		item_data[i].item_name = malloc((strlen(item_name)+1)*sizeof(char));
+		strcpy(item_data[i].item_name, item_name);
 
 		char* ite_char = get_value("char", pairs).string;
 		item_data[i].item_char = malloc((strlen(ite_char)+1) * sizeof(char));

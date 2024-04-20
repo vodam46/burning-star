@@ -4,3 +4,4 @@ bin
 Session.vim
 wmap
 time
+valgrind

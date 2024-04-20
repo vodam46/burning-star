@@ -80,11 +80,13 @@ void save_map(world_map wmap, char* file_name) {
 			}
 
 			fwrite(&wmap.map[y][x].ent.type, sizeof(entity_type), 1, file);
-			fwrite(&wmap.map[y][x].ent.health, sizeof(int), 1, file);
-			fwrite(&wmap.map[y][x].ent.strength, sizeof(int), 1, file);
-			fwrite(&wmap.map[y][x].ent.inventory.num_items, sizeof(int), 1, file);
-			for (int i = 0; i < wmap.map[y][x].ent.inventory.num_items; i++) {
-				fwrite(&wmap.map[y][x].ent.inventory.items[i].type, sizeof(int), 1, file);
+			if (wmap.map[y][x].ent.type != none_entity) {
+				fwrite(&wmap.map[y][x].ent.health, sizeof(int), 1, file);
+				fwrite(&wmap.map[y][x].ent.strength, sizeof(int), 1, file);
+				fwrite(&wmap.map[y][x].ent.inventory.num_items, sizeof(int), 1, file);
+				for (int i = 0; i < wmap.map[y][x].ent.inventory.num_items; i++) {
+					fwrite(&wmap.map[y][x].ent.inventory.items[i].type, sizeof(int), 1, file);
+				}
 			}
 		}
 	}
@@ -137,16 +139,23 @@ world_map load_map(char* file_name) {
 			}
 
 			fread(&wmap.map[y][x].ent.type, sizeof(entity_type), 1, file);
-			fread(&wmap.map[y][x].ent.health, sizeof(int), 1, file);
-			fread(&wmap.map[y][x].ent.strength, sizeof(int), 1, file);
+			if (wmap.map[y][x].ent.type != none_entity) {
+				fread(&wmap.map[y][x].ent.health, sizeof(int), 1, file);
+				fread(&wmap.map[y][x].ent.strength, sizeof(int), 1, file);
 
-			fread(&num_items, sizeof(int), 1, file);
-			for (int i = 0; i < num_items; i++) {
-				fread(&item_type, sizeof(int), 1, file);
-				wmap.map[y][x].ent.inventory = add_to_inventory(
-					wmap.map[y][x].ent.inventory,
-					item_data[item_type].item
-				);
+				fread(&num_items, sizeof(int), 1, file);
+				for (int i = 0; i < num_items; i++) {
+					fread(&item_type, sizeof(int), 1, file);
+					wmap.map[y][x].ent.inventory = add_to_inventory(
+						wmap.map[y][x].ent.inventory,
+						item_data[item_type].item
+					);
+				}
+			} else {
+				wmap.map[y][x].ent.health = 0;
+				wmap.map[y][x].ent.strength = 0;
+				wmap.map[y][x].ent.inventory.num_items = 0;
+				wmap.map[y][x].ent.maxhealth = 0;
 			}
 			wmap.map[y][x].ent.pos = vect_init(y, x);
 
@@ -171,6 +180,39 @@ world_map load_map(char* file_name) {
 	return wmap;
 }
 
+int VIEW_RADIUS = 20;
+void do_fov_line(world_map wmap, float x, float y) {
+	int i;
+	float ox,oy;
+	ox = (float)wmap.ent_arr[0]->pos.x+0.5f;
+	oy = (float)wmap.ent_arr[0]->pos.y+0.5f;
+	for(i=0;i<VIEW_RADIUS;i++) {
+		if (!in_bounds(vect_init((int)oy, (int)ox), vect_init(0,0), wmap.size))
+			return;
+		wmap.map[(int)oy][(int)ox].visible = 1; //Set the tile to visible.
+		if (!tile_data[wmap.map[(int)oy][(int)ox].type].see_through) {
+			return;
+		}
+		ox+=x;
+		oy+=y;
+	}
+}
+void calculate_fov(world_map wmap) {
+	float dir_x, dir_y;
+	int i;
+	for (int x = 0; x < wmap.size.x; x++) {
+		for (int y = 0; y < wmap.size.y; y++) {
+			if (wmap.map[y][x].visible)
+				wmap.map[y][x].seen = 1;
+			wmap.map[y][x].visible = 0;
+		}
+	}
+	for(i=0;i<360;i++) {
+		dir_x=cos((float)i*0.01745f);
+		dir_y=sin((float)i*0.01745f);
+		do_fov_line(wmap, dir_x, dir_y);
+	}
+}
 
 // world generation
 // map_size.y is the height
@@ -193,6 +235,8 @@ world_map wmap_gen_tile(vector map_size, tile_type type) {
 				ent_init(vect_init(y,x), none_entity, 0, 0, 0, (inventory){0, 0}),
 				(inventory){0}
 			);
+			wmap.map[y][x].visible = 0;
+			wmap.map[y][x].seen = 0;
 		}
 	}
 	wmap.ent_arr = malloc(wmap.size.y * wmap.size.x * sizeof(entity));

@@ -18,7 +18,6 @@ world data structure
 
 	tile struct
 		- vehicles? (not needed (dont know if ill ever make vehicles))
-		- visibility through said tile
 	populate the data files
 
 world gen
@@ -64,7 +63,6 @@ generalize the drawing functions -> preparations for graphics
 rewrite and refactor
 opensimplex noise
 !!! free all alloc'd memory - most of it in the init functions (check valgrind)
-valgrind make target?
 clean up the key_val_reader.c file, make it not made of spaghetti code
 	- maybe use getline?
 optimize pathfinding allocation (if dijkstra_map != NULL)
@@ -80,10 +78,10 @@ more tiles!
 	- floor types - wooden, stone, metal?
 	- trees, plants - grass  - ", O (trunk)
 	- stairs - > <
-	- statues? - weird unicode letters
+	- statues? - weird unicode letters (Æ, ...)
 	- furniture - tables, chairs - T? Π?
 	- bones/graves?
-	- fire
+	- fire - red !
 	- wooden walls - different color? #
 	- path - . , :
 
@@ -109,4 +107,5 @@ ranged attacks
 fix various rendering bugs
 	- line of @ between player and enemy
 	- item that wasnt there
-better algorithm for spawning enemies
+a way to use different tile chars depending on situation
+blue tiles for only seen tiles

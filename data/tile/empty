@@ -1,3 +1,5 @@
 name = Empty
-char =
+char = \ 
 color = 0
+walkable = 1
+see_through = 1

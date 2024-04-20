@@ -20,6 +20,9 @@ void circle_filled(tile** wmap, vector center, float radius, tile_type type);
 void save_map(world_map wmap, char* file_name);
 world_map load_map(char* file_name);
 
+void do_fov_line(world_map wmap, float x, float y);
+void calculate_fov(world_map wmap);
+
 world_map wmap_gen_tile(vector map_size, tile_type type);
 world_map wmap_gen_maze_base(vector map_size);
 world_map wmap_gen_bin_tree_maze(vector map_size);

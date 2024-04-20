@@ -27,7 +27,7 @@ vector basic_dir(vector start, vector end) {
 
 int map_allocated = 0;
 dijkstra_map_node** dijkstra_map;
-void update_dijstrka_map(world_map wmap) {
+void update_dijkstra_map(world_map wmap) {
 	// initialization
 	if (map_allocated) {
 		for (int y = 0; y < wmap.size.y; y++)

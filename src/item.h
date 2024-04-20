@@ -22,6 +22,7 @@ typedef struct {
 	item item;
 	int item_color;
 	char* item_char;
+	char* item_name;
 } ite_data;
 extern ite_data item_data[last_item];
 

@@ -1,3 +1,5 @@
 name = Wall
-char = █
+char = \#
 color = 0
+walkable = 0
+see_through = 0

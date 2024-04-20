@@ -42,7 +42,7 @@ int main() {
 	assert(tile_data[1].tile.type == wall);
 	assert(tile_comp(
 		tile_init(vect_init(0,0),empty,ent_init(vect_init(0,0),player,1,1,1,(inventory){0}),(inventory){0}),
-		(tile){(vector){0,0},empty,(entity){player,(vector){0,0},1,1,1,(inventory){0}},(inventory){0}}
+		(tile){(vector){0,0},empty,(entity){player,(vector){0,0},1,1,1,(inventory){0}},(inventory){0},0,0}
 	));
 
 	// map

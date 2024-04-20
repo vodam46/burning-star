@@ -84,6 +84,8 @@ pairs_arr parse_file(char* filename) {
 
 				fsetpos(file, &cur_point);
 			} else if (ch != ' ' && write && ch != '\t' && !(ch == ']' && array)) {
+				if (ch == '\\')
+					ch = fgetc(file);
 				if (value) {
 
 					if (array) {
@@ -122,6 +124,10 @@ void delete_pairs(pairs_arr pairs) {
 	for (int i = 0; i < pairs.num_pairs; i++) {
 		free(pairs.pairs[i].key);
 		free(pairs.pairs[i].value.string);
+		for (int j = 0; i < pairs.pairs[i].value.num_elements; j++) {
+			free(pairs.pairs[i].value.array[j]);
+		}
+		free(pairs.pairs[i].value.array);
 	}
 	free(pairs.pairs);
 }
