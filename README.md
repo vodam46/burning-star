@@ -6,6 +6,10 @@ than "just because" (and to also learn C).
 For future (hopefully) features see [todo](todo) file
 
 ## Installation
+### Configuration
+Read through the [config](./src/config.h) file, and comment/uncomment the
+options you want, only then can you proceed
+
 ### Linux
 #### download the source code
 ```sh

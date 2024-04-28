@@ -1,20 +1,30 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
-#if defined(__CYGWIN__)
-#include <ncurses/ncurses.h>
-#elif defined(unix)
-#include <ncurses.h>
+#include "config.h"
+
+#ifdef USE_CURSES
+#include "curses.h"
+
+extern WINDOW* main_scr;
+
+#define clearinp() flushinp()
+#define getinp() wgetch(stdscr)
+
 #else
-#error "Unknown platform"
+#error "please use curses, there is not yet another rendering system"
 #endif
 
+
 #include "map.h"
-#include "tile.h"
+
+extern vector scr_size, main_scr_size;
+void drawing_init(void);
+void drawing_end(void);
+void resize_screen(void);
+void final_message(char* msg);
 
 void draw(
-	WINDOW* stdscr,
-	WINDOW* main_scr,
 	world_map wmap,
 	vector scr_size,
 	vector main_scr_size,
@@ -22,11 +32,11 @@ void draw(
 );
 
 void menu_draw(
-	WINDOW* stdscr,
 	char* prompt,
 	char** options,
 	int num_options,
-	int cur_option
+	int cur_option,
+	int max_len
 );
 
 #endif

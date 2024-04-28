@@ -1,12 +1,3 @@
-
-#if defined(__CYGWIN__)
-#include <ncurses/ncurses.h>
-#elif defined(unix)
-#include <ncurses.h>
-#else
-#error "Unknown platform"
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -34,20 +25,7 @@ int main(void) {
 	items_init();
 	noise_init();
 
-	// screen init
-	initscr();
-	start_color();
-	keypad(stdscr, TRUE);
-	vector scr_size;
-	getmaxyx(stdscr, scr_size.y, scr_size.x);
-	vector main_scr_size = vect_init(scr_size.y-4, scr_size.x-2);
-
-	// colors
-	init_pair(0,COLOR_WHITE,COLOR_BLACK);
-	init_pair(1,COLOR_GREEN,COLOR_BLACK);
-	init_pair(2,COLOR_RED,COLOR_YELLOW);
-	init_pair(3,COLOR_BLUE,COLOR_BLACK);
-	init_pair(4,COLOR_BLUE,COLOR_BLACK);
+	drawing_init();
 
 	char* map_options[] = {
 		"Empty map",
@@ -57,19 +35,14 @@ int main(void) {
 		"Load previous"
 	};
 	int map_choice = menu(
-		stdscr,
-		scr_size,
 		"Choose world gen options",
 		map_options,
 		sizeof(map_options)/sizeof(*map_options)
 	);
 	if (map_choice == -1) {
-		endwin();
+		drawing_end();
 		return 1;
 	}
-
-	WINDOW* main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
-
 	world_map wmap;
 	wmap.size = vect_init(1000, 1000);
 	switch (map_choice) {
@@ -120,10 +93,10 @@ int main(void) {
 			wmap.ent_arr[0]->pos.x
 		);
 		calculate_fov(wmap);
-		draw(stdscr, main_scr, wmap, scr_size, main_scr_size, msg);
+		draw(wmap, scr_size, main_scr_size, msg);
 
-		flushinp();
-		ch = wgetch(stdscr);					// updates the user input
+		clearinp();
+		ch = getinp();					// updates the user input
 		vector move_dir = vect_init(0,0);
 		vector dig_dir = vect_init(0, 0);
 		int user_moved = 1;
@@ -165,13 +138,13 @@ int main(void) {
 			// activating items from inventory
 			case ('a'):
 				if (wmap.ent_arr[0]->inventory.num_items != 0)
-					user_moved = use_item_from_inventory(stdscr, scr_size, wmap, 0);
+					user_moved = use_item_from_inventory(wmap, 0);
 				else user_moved = 0;
 				break;
 
 			// digging
 			case ('d'):
-				switch(wgetch(stdscr)) {
+				switch(getinp()) {
 					case(KEY_UP): case(56):
 						dig_dir = vect_init(-1, 0);
 						break;
@@ -184,15 +157,14 @@ int main(void) {
 					case(KEY_LEFT):	case(52):
 						dig_dir = vect_init(0, -1);
 						break;
+					default:
+						dig_dir = vect_init(0,0);
 				}
 				user_moved = dig(wmap, wmap.ent_arr[0]->pos, dig_dir);
 				break;
 
 			case KEY_RESIZE:
-				delwin(main_scr);
-				getmaxyx(stdscr, scr_size.y, scr_size.x);
-				main_scr_size = vect_init(scr_size.y-4, scr_size.x-2);
-				main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
+				resize_screen();
 				user_moved = 0;
 				break;
 
@@ -201,8 +173,9 @@ int main(void) {
 				user_moved = 0;
 				break;
 			case 's':
+				// mvprintw(1, 1, "saving"); // not really needed? saving is so
+				// fast its useless
 				save_map(wmap, "wmap");
-				mvprintw(1, 1, "saving");
 				user_moved = 0;
 				break;
 
@@ -239,7 +212,7 @@ int main(void) {
 					wmap.ent_num--;
 				}
 				vector ent_dir = vect_init(0, 0);
-				if (dijkstra_map[ent_pos.y][ent_pos.x].visited) {
+				if (map_allocated && dijkstra_map[ent_pos.y][ent_pos.x].visited) {
 					ent_dir = dijkstra_map[ent_pos.y][ent_pos.x].dir;
 				} else {
 					ent_dir = basic_dir(ent_pos, wmap.ent_arr[0]->pos);
@@ -277,15 +250,11 @@ int main(void) {
 		}
 	}
 	if (died) {
-		clear();
 		sprintf(msg,"You died, score: %d, turns played: %d", wmap.ent_killed, wmap.turn_count);
-		mvprintw((int)scr_size.y/2,(int)scr_size.x/2-(int)strlen(msg)/2,"%s",msg);
-		refresh();
-		getch();
 	}
 
 
-	endwin();
+	drawing_end();
 
 	for (int y = 0; y < scr_size.y; y++) {
 		free(wmap.map[y]);

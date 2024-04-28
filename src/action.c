@@ -97,13 +97,13 @@ int pick_up_item(world_map map, int ent_i) {
 	return 0;
 }
 
-int use_item_from_inventory(WINDOW* stdscr, vector scr_size, world_map wmap, int ent_i) {
+int use_item_from_inventory(world_map wmap, int ent_i) {
 	char** item_names = malloc(wmap.ent_arr[0]->inventory.num_items);
 	for (int i = 0; i < wmap.ent_arr[ent_i]->inventory.num_items; i++) {
 		item_names[0] = calloc((strlen(item_data[wmap.ent_arr[ent_i]->inventory.items[i].type].item_name)+1),sizeof(char));
 		strcpy(item_names[i], item_data[wmap.ent_arr[ent_i]->inventory.items[i].type].item_name);
 	}
-	int choice = menu(stdscr, scr_size, "Choose item to use", item_names, wmap.ent_arr[0]->inventory.num_items);
+	int choice = menu("Choose item to use", item_names, wmap.ent_arr[0]->inventory.num_items);
 	if (choice > 0)
 		return use_item(wmap, ent_i, choice);
 	else

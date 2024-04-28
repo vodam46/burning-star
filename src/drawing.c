@@ -1,16 +1,51 @@
-#if defined(__CYGWIN__)
-#include <ncurses/ncurses.h>
-#elif defined(unix)
-#include <ncurses.h>
-#else
-#error "Unknown platform"
-#endif
+#include "config.h"
+#ifdef USE_CURSES
+
+#include "curses.h"
 
 #include <sys/param.h>
+#include <string.h>
 
 #include "drawing.h"
 #include "map.h"
 #include "tile.h"
+
+vector scr_size, main_scr_size;
+WINDOW* main_scr;
+void drawing_init(void) {
+	// screen init
+	initscr();
+	start_color();
+	keypad(stdscr, TRUE);
+	getmaxyx(stdscr, scr_size.y, scr_size.x);
+	main_scr_size = vect_init(scr_size.y-4, scr_size.x-2);
+
+	// colors
+	init_pair(0,COLOR_WHITE,COLOR_BLACK);
+	init_pair(1,COLOR_GREEN,COLOR_BLACK);
+	init_pair(2,COLOR_RED,COLOR_YELLOW);
+	init_pair(3,COLOR_BLUE,COLOR_BLACK);
+	init_pair(4,COLOR_BLUE,COLOR_BLACK);
+
+	main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
+}
+void drawing_end(void) {
+	endwin();
+}
+void resize_screen(void) {
+	delwin(main_scr);
+	getmaxyx(stdscr, scr_size.y, scr_size.x);
+	main_scr_size = vect_init(scr_size.y-4, scr_size.x-2);
+	main_scr = newwin(main_scr_size.y,main_scr_size.x, 3,1);
+}
+void final_message(char* msg) {
+	clear();
+	mvprintw((int)scr_size.y/2,(int)scr_size.x/2-(int)strlen(msg)/2,"%s",msg);
+	refresh();
+	getch();
+}
+
+
 
 int scrolling_map(int player_pos, int half_screen, int map_width) {
 	if (player_pos < half_screen) {
@@ -21,14 +56,13 @@ int scrolling_map(int player_pos, int half_screen, int map_width) {
 		return player_pos - half_screen;
 	}
 }
-
 void draw_main_scr(WINDOW* main_scr, world_map wmap, vector scr_size) {
 	// rendering
 	// y |	height
 	// x -	width
 	vector half = vect_init((int)scr_size.y/2, (int)scr_size.x/2);
 	vector camera = vect_init(
-		(wmap.size.y >= scr_size.y ? scrolling_map(wmap.ent_arr[0]->pos.y, half.y, wmap.size.y) : 0),
+		(wmap.size.y >= scr_size.y ? scrolling_map(wmap.ent_arr[0]->pos.y, half.y, wmap.size.y+1) : 0),
 		(wmap.size.x >= scr_size.x ? scrolling_map(wmap.ent_arr[0]->pos.x, half.x, wmap.size.x) : 0)
 	);
 	for (int y = MAX(camera.y, 0); y < scr_size.y+camera.y && y < wmap.size.y; y++) {
@@ -93,8 +127,6 @@ void draw_border(WINDOW* stdscr, vector scr_size) {
 }
 
 void draw(
-	WINDOW* stdscr,
-	WINDOW* main_scr,
 	world_map wmap,
 	vector scr_size,
 	vector main_scr_size,
@@ -108,18 +140,25 @@ void draw(
 }
 
 void menu_draw(
-	WINDOW* stdscr,
 	char* prompt,
 	char** options,
 	int num_options,
-	int cur_option
+	int cur_option,
+	int max_len
 ) {
+	vector offset = vect_init(
+		(int)(scr_size.y/2-num_options/2),
+		(int)(scr_size.x/2-max_len/2)
+	);
 	werase(stdscr);
-	wprintw(stdscr, "%s", prompt);
+	mvwprintw(stdscr,offset.y,offset.x, "%s", prompt);
 	for (int i = 0; i < num_options; i++) {
-		mvwprintw(stdscr, i+1, 0, "[ ] %s", options[i]);
+		mvwprintw(stdscr, offset.y+i+1, offset.x, "[ ] %s", options[i]);
 	}
-	mvwaddch(stdscr,cur_option+1,1,'#');
-	wmove(stdscr, cur_option+1, 1);
+	mvwaddch(stdscr,offset.y+cur_option+1,offset.x+1,'#');
+	wmove(stdscr, offset.y+cur_option+1, offset.x+1);
 	wrefresh(stdscr);
 }
+#else
+#error "please use curses, there is not yet another rendering system"
+#endif

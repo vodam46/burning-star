@@ -11,6 +11,7 @@ sources=action.c ai.c drawing.c entity.c item.c key_val_reader.c main.c map.c me
 .PHONY: clean count debug debug-build default run
 
 default: $(OUT)
+build: $(OUT)
 
 clean:
 	-rm -Rf obj dep bin valgrind

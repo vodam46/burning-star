@@ -56,10 +56,7 @@ or actual worldgen?
 	- overworld - villages and stuff
 	- dungeons - fixed size
 rewrite wmap gen algs
-make the drawing and input functions bindings independent of ncurses
-	- ui.h ui.c ?
 move data files into different directory (~/.local, AppData)
-generalize the drawing functions -> preparations for graphics
 rewrite and refactor
 opensimplex noise
 !!! free all alloc'd memory - most of it in the init functions (check valgrind)
@@ -67,8 +64,6 @@ clean up the key_val_reader.c file, make it not made of spaghetti code
 	- maybe use getline?
 optimize pathfinding allocation (if dijkstra_map != NULL)
 REWRITE THE ENTIRE DIJKSTRA PATHFINDING ALG, ITS SHIT
-fix draw_main_scr adding an empty inaccessible line to the bottom of the map,
-	possibly even to the side
 overmap tiles?
 	world would be travelled by moving between the overmap tiles, each of a
 	different type
@@ -108,4 +103,3 @@ fix various rendering bugs
 	- line of @ between player and enemy
 	- item that wasnt there
 a way to use different tile chars depending on situation
-blue tiles for only seen tiles
